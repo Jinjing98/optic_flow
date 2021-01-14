@@ -23,22 +23,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06aefe3e-824e-4afc-8c5a-c6d3bb2d679d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/addnoise2img.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/checking.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/cropNclipVideo.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/gunnarfarnback_real.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/hornschunck_real.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/signalProcess.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/sparse_lk_real.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/video2pic.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/warp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/checkpoints/FlowNet2_checkpoint.pth.tar.baiduyun.uploading.cfg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frames2video.py" beforeDir="false" afterPath="$PROJECT_DIR$/frames2video.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/networks/FlowNetC.py" beforeDir="false" afterPath="$PROJECT_DIR$/networks/FlowNetC.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/real_time_opticflow.py" beforeDir="false" afterPath="$PROJECT_DIR$/NN_opticflow.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_a_pair.py" beforeDir="false" afterPath="$PROJECT_DIR$/NNpairNwarp.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_more_frames.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_more_frames.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -210,6 +195,8 @@
       <workItem from="1610113244522" duration="3118000" />
       <workItem from="1610125071550" duration="12555000" />
       <workItem from="1610175851436" duration="49404000" />
+      <workItem from="1610374475726" duration="625000" />
+      <workItem from="1610558633095" duration="703000" />
     </task>
     <servers />
   </component>

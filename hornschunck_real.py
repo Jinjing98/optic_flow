@@ -9,13 +9,20 @@ from frames2video import pic2video
 
 size = (854,480)
 # path = "D:\Study\Datasets\HS_test\HS_test_result\\"
-flow_path = "D:\Study\Datasets\\test3L\HSflow\\"
+flow_path = "D:\Study\Datasets\\moreCamBestNontrembling\\HSflow\\"
 # Capturing the video file 0 for videocam    else you can provide the url
 
 # cap =  cv2.VideoCapture("D:\Study\Datasets\\video64.mp4")  # video64 68
 # cap = cv2.VideoCapture("D:\Study\Datasets\\noisy64.mp4")
 
 cap = cv2.VideoCapture(0)
+
+cap = cv2.VideoCapture("D:\Study\Datasets\\jinjing.mp4")
+cap = cv2.VideoCapture("D:\Study\Datasets\\test3L.mp4")
+# cap = cv2.VideoCapture("D:\Study\\Datasets\\moreCamBest.mp4")
+# cap = cv2.VideoCapture("D:\Study\\Datasets\\moreCamBestNontrembling.mp4")
+
+
 
 # cap = cv2.VideoCapture("D:\Study\Datasets\\test3L.mp4")
 # cap = cv2.VideoCapture("D:\Study\Datasets\\CamPlusOrgan.mp4")
@@ -43,8 +50,8 @@ hsv_mask[..., 1] = 255
 
 SIGS_ang = []
 SIGS_mag = []
-# SIGS_gray = []
-# SIGS_blue = []
+SIGS_gray = []
+SIGS_graybetter = []
 # SIGS_U = []
 # SIGS_V = []
 
@@ -101,12 +108,25 @@ while(i):
 	SIGS_ang.append(SIG_ang)
 	SIGS_mag.append(SIG_mag)
 
-	# SIG_gray = np.mean(next)
+	SIG_gray = np.mean(next)
+
+
+	SIG_gray = np.mean(next)
+	SIG_graybetter = np.true_divide(next.sum(),(next!=0).sum())	#  对二维度灰度图中所有非零元素取均值
 	# SIG_blue = np.mean(frame2[..., 0])
-	# SIGS_gray.append(SIG_gray)
+	SIGS_gray.append(SIG_gray)
+	SIGS_graybetter.append(SIG_graybetter)
 	# SIGS_blue.append(SIG_blue)
 
 	# Convert to rgb
+
+
+	# #debug jinjing
+	if i == 300:
+		print("jinjing")
+
+
+
 
 
 	rgb_representation = cv2.cvtColor(hsv_mask, cv2.COLOR_HSV2BGR)
@@ -115,9 +135,8 @@ while(i):
 
 
 
-	# cv2.imshow('result_window', double_representation)
-	cv2.imshow('result_window', rgb_representation)
-	# cv2.imwrite(path + str(i) + '.png', double_representation)
+	cv2.imshow('result_window', double_representation)
+	# cv2.imshow('result_window', rgb_representation)
 	# cv2.imwrite(flow_path + str(i) + '.png', rgb_representation)
 
 	kk = cv2.waitKey(20) & 0xff
@@ -137,4 +156,6 @@ print(np.array(SIGS_ang).size)
 print(np.array(SIGS_mag).size)
 # np.save(flow_path+"SIGS_ang.txt",SIGS_ang)
 # np.save(flow_path+"SIGS_mag.txt",SIGS_mag)
+# np.save(flow_path+"SIGS_gray.txt",SIGS_gray)
+# np.save(flow_path+"SIGS_graybetter.txt",SIGS_graybetter)
 

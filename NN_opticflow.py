@@ -12,19 +12,22 @@ from models import *  # the path is depended on where you create this module
 from utils.flow_utils import flow2img
 import matplotlib.pyplot as plt
 
-save_path = '../Datasets/real_test/realtime_test_result/'
-save_path = '../Datasets/surgery_test/noisy_test_result/'
+
 flow_path = "D:\Study\Datasets\\Cam\\NNflow\\"
+flow_path = "D:\Study\\Datasets\\moreCamBest\\NNflow\\"
 
 
 
 # crop_size = (768, 512)
 crop_size = (512, 384)
-# cap = cv2.VideoCapture(0)
+
 # cap = cv2.VideoCapture("D:\Study\Datasets\\video64.mp4")
 # cap = cv2.VideoCapture("D:\Study\Datasets\\noisy64.mp4")
-# cap = cv2.VideoCapture("D:\Study\Datasets\\test3L.mp4")
-cap = cv2.VideoCapture("D:\Study\Datasets\\Cam.mp4")
+cap = cv2.VideoCapture("D:\Study\Datasets\\test3L.mp4")
+# cap = cv2.VideoCapture("D:\Study\Datasets\\test1L.mp4")
+# cap = cv2.VideoCapture(0)
+# cap = cv2.VideoCapture("D:\Study\\Datasets\\moreCamBest.mp4")
+
 
 
 
@@ -74,7 +77,6 @@ while (i):
     #
     if ret != True:
         break
-
 
 
     next = frame2
@@ -131,7 +133,7 @@ while (i):
     # rgb_representation = cv2.cvtColor(hsv_mask, cv2.COLOR_HSV2BGR)
     double_representation = cv2.addWeighted(img,0.5,pim2, 0.5, 0)
     # cv2.imshow("window",double_representation)
-    cv2.imwrite(flow_path + str(i) + '.png', img)
+    # cv2.imwrite(flow_path + str(i) + '.png', img)
     cv2.imshow("window", img)
     kk = cv2.waitKey(20) & 0xff  #实时可视化光流图片，（人自己写好了flow2img函数）
     # Press 'e' to exit the video
@@ -145,5 +147,5 @@ while (i):
 
 print(np.array(SIGS_ang).size)
 print(np.array(SIGS_mag).size)
-np.save(flow_path+"SIGS_ang.txt",SIGS_ang)
-np.save(flow_path+"SIGS_mag.txt",SIGS_mag)
+# np.save(flow_path+"SIGS_ang.txt",SIGS_ang)
+# np.save(flow_path+"SIGS_mag.txt",SIGS_mag)

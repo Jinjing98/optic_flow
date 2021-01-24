@@ -8,16 +8,18 @@ from warp import *
 from models import FlowNet2  # the path is depended on where you create this module
 from utils.frame_utils import read_gen  # the path is depended on where you create this module
 
-# pim1path = "D:\Study\Datasets\pairs\\video64\\150.png"
-# pim2path = "D:\Study\Datasets\pairs\\video64\\154.png"
-# estimated_pim2path = "D:\Study\Datasets\pairs\\video64\\estimated154.png"
-# RGBflowpath = 'D:\Study\Datasets\pairs\\video64\Pair150n154.png'
+pim1path = "D:\Study\Datasets\pairs\\video64\\150.png"
+pim2path = "D:\Study\Datasets\pairs\\video64\\154.png"
+estimated_pim2pathN = "D:\Study\Datasets\pairs\\video64\\estimated154.png"
+estimated_pim2pathP = "D:\Study\Datasets\pairs\\video64\\estimated150.png"
 
+RGBflowpath = 'D:\Study\Datasets\pairs\\video64\Pair150n154.png'
 
-pim1path = "D:\Study\Datasets\pairs\\video64\\jinjing1.png"
-pim2path = "D:\Study\Datasets\pairs\\video64\\jinjing2.png"
-estimated_pim2path = "D:\Study\Datasets\pairs\\video64\\estimatedjinjing2.png"
-RGBflowpath = "D:\Study\Datasets\pairs\\video64\\Pairjinjing1n2.png"
+#
+# pim1path = "D:\Study\Datasets\pairs\\video64\\jinjing1.png"
+# pim2path = "D:\Study\Datasets\pairs\\video64\\jinjing2.png"
+# estimated_pim2path = "D:\Study\Datasets\pairs\\video64\\estimatedjinjing2prime.png"
+# RGBflowpath = "D:\Study\Datasets\pairs\\video64\\Pairjinjing1n2.png"
 
 
 
@@ -92,16 +94,11 @@ if __name__ == '__main__':
 
 
     data = result.data.cpu().numpy().transpose(1, 2, 0)
-    # writeFlow("../Datasets/jinjing/training/clean/frmsOFaction1/0000007-img.flo", data)
-    estimated_pim2 = warp_flow(pim1,data)  # 这个warp是把1warp到2
 
-    estimated_pim2 = image_warp(pim2, data, mode='bilinear') #  这个warp是把2warp回1
-    # estimated_pim2 = image_warp(pim2, data, mode='nearest')
-
-    cv2.imwrite(estimated_pim2path, estimated_pim2)
-
-
-
+    estimated_pim2N = warp_flow(pim1,data)  # 这个warp是把1warp到2
+    estimated_pim2P = image_warp(pim2, data, mode='nearest') #  这个warp是把2warp回1
+    cv2.imwrite(estimated_pim2pathN, estimated_pim2N)
+    cv2.imwrite(estimated_pim2pathP, estimated_pim2P)
 
 
     img = flow2img(data)   #  data是flow array   这里直接得到bgr图片

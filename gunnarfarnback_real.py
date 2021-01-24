@@ -7,15 +7,18 @@ import time
 
 crop_size = (512,384)
 # size = (854, 480)
-# path = "D:\Study\Datasets\GF_test\GF_test_result\\"
-flow_path = "D:\Study\Datasets\\Cam\\GFflow\\"
+
+flow_path = "D:\Study\\Datasets\\moreCamBest\\GFflow\\"
 # Capturing the video file 0 for videocam else you can provide the url
 
 cap = cv2.VideoCapture("D:\Study\Datasets\\test3L.mp4")  #video64 68
 # cap = cv2.VideoCapture("D:\Study\Datasets\\noisy64.mp4")
 cap = cv2.VideoCapture("D:\Study\Datasets\\Cam.mp4")
 # a = cap.get(cv2.CAP_PROP_FPS)
-#cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture("D:\Study\\Datasets\\moreCamBestNontrembling.mp4")
+cap = cv2.VideoCapture(0)
+
+
 # def sigmoid(x):
 #      return 1 / (1 + math.e ** -x)
 
@@ -97,7 +100,7 @@ while(i):
 	# Set image hue according to the angle of optical flow   HUE  1st d of hsv
     hsv_mask[..., 0] = ang * 180 / np.pi/2   #H : 0-180
 	# Set value as per the normalized magnitude of optical flow      Value 3rd d of hsv
-    hsv_mask[..., 2] = cv2.normalize(mag**2, None, 0, 255, cv2.NORM_MINMAX )   #nolinear transformation of value   sigmoid?
+    hsv_mask[..., 2] = cv2.normalize(mag, None, 0, 255, cv2.NORM_MINMAX )   #nolinear transformation of value   sigmoid?
 	# var = hsv_mask[..., 2] - mag
     end = time.time()
     print('vis time : ' + str(end-start))
@@ -120,10 +123,9 @@ while(i):
     double_representation = cv2.addWeighted(rgb_representation,0.5,frame2, 0.5, 0)
 
 
-    cv2.imshow('result_window', double_representation)
-    # cv2.imwrite(path + str(i) + '.png', double_representation)
-    # cv2.imshow('result_window', rgb_representation)
-    cv2.imwrite(flow_path + str(i) + '.png',rgb_representation)
+    # cv2.imshow('result_window', double_representation)
+    cv2.imshow('result_window', rgb_representation)
+    # cv2.imwrite(flow_path + str(i) + '.png',rgb_representation)
 
     kk = cv2.waitKey(20) & 0xff
 	# Press 'e' to exit the video
@@ -143,5 +145,5 @@ cv2.destroyAllWindows()
 
 print(np.array(SIGS_ang).size)
 print(np.array(SIGS_mag).size)
-np.save(flow_path+"SIGS_ang.txt",SIGS_ang)
-np.save(flow_path+"SIGS_mag.txt",SIGS_mag)
+# np.save(flow_path+"SIGS_ang.txt",SIGS_ang)
+# np.save(flow_path+"SIGS_mag.txt",SIGS_mag)

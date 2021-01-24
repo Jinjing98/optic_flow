@@ -3,7 +3,7 @@ import cv2
 
 cap = cv2.VideoCapture("D:\Study\Datasets\\video64.mp4")
 # cap = cv2.VideoCapture("D:\Study\Datasets\\noisy64.mp4")
-cap = cv2.VideoCapture("D:\Study\Datasets\\test4L.mp4")
+cap = cv2.VideoCapture("D:\Study\Datasets\\test1L.mp4")
 # cap = cv2.VideoCapture(0)
 
 # ShiTomas角点检测的参数
@@ -56,10 +56,10 @@ while(1):
            # c, d = old.ravel()
             #mask = cv2.line(mask, (a, b), (c, d), color[i].tolist(), 2)
 
-            frame = cv2.circle(background, (a, b), 5, color[1].tolist(), -1)
-       # img = cv2.add(frame, mask)
+            frame2 = cv2.circle(background, (a, b), 5, color[1].tolist(), -1)
+        img = cv2.add(frame2, frame)
 
-        cv2.imshow('frame', frame)
+        cv2.imshow('frame', img)
         k = cv2.waitKey(30) & 0xff
         if k == 27:
             break

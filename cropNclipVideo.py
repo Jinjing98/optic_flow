@@ -2,10 +2,17 @@ import cv2
 
 INPUT_FILE = 't1.avi'
 INPUT_FILE = "D:\Study\Datasets\\moreCamStable.mp4"
-
 OUTPUT_FILE = 'D:\Study\Datasets\\moreCamBest.avi'
+INPUT_FILE = "D:\Study\Datasets\signalVideos\staticCam\\cardNresp_turb.avi"
+OUTPUT_FILE = 'D:\Study\Datasets\signalVideos\staticCam\\cardNresp_turbG2.avi'
+INPUT_FILE = "D:\Study\Datasets\signalVideos\staticCam\\resp5_turb.avi"
+OUTPUT_FILE = 'D:\Study\Datasets\signalVideos\staticCam\\resp5_turbB1.avi'
+
 start_frame = 0*25
-end_frame = 29*25  # 1:15 - 1:40
+end_frame = 36*25  # 1:15 - 1:40
+
+
+
 # start_frame = 75*25
 # end_frame = 100*25  # 1:15 - 1:40
 reader = cv2.VideoCapture(INPUT_FILE)
@@ -23,7 +30,7 @@ fps = 25
 writer = cv2.VideoWriter(OUTPUT_FILE,
                          cv2.VideoWriter_fourcc('I', '4', '2', '0'),
                          fps,  # fps
-                         (125,95))  # resolution   (原本为 1440，288)
+                         (325,195))  # resolution   (原本为 1440，288)
 
 print(reader.isOpened())
 have_more_frame = True
@@ -33,8 +40,8 @@ while have_more_frame:
     c += 1
     if c >= start_frame and c <= end_frame:
         cv2.waitKey(1)
-        frame = frame[81:175, 291:415]
-
+        # frame = frame[81:175, 291:415]
+        frame = frame[0:194, 20:344]  # 00 is upper left corner  1st is height 2nd is width  576 720
         writer.write(frame)
         print(str(c) + ' is ok')
     if c > end_frame:

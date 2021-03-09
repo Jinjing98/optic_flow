@@ -23,7 +23,7 @@ def butter_bandpass_filter(data, lowcut, highcut, fs, order=5):
     return y
 
 
-def fft(fs,totalT,path, real_freq,flag = 'half',bandpass = False,Range = None):   #  默认为half
+def fft(fs,T,path, real_freq,flag = 'half',bandpass = False,Range = None,):   #  默认为half
 
 
 
@@ -34,10 +34,13 @@ def fft(fs,totalT,path, real_freq,flag = 'half',bandpass = False,Range = None): 
     # 采样频率
     # fs=25   #  反映在我们的应用中是视频帧率
     # totalT = 25 # 单位为s 30 25
+    totalT = (T[1]-T[0])
+
     totalNbr = fs * totalT
 
     #jinjing test
     real_totalNbr = real_freq * totalT
+
 
     # 采样步长
     # t = [x/fs for x in range(totalNbr)]
@@ -50,7 +53,8 @@ def fft(fs,totalT,path, real_freq,flag = 'half',bandpass = False,Range = None): 
     # y = np.load('D:\Study\Datasets\\Cam\HSflow\\SIGS_ang.txt.npy')[0:totalNbr]
     # y = np.load('D:\Study\Datasets\\Cam\\NNflow\\SIGS_ang.txt.npy')[0:totalNbr]
     y = np.load(path)[0:totalNbr]
-    y = y[::(fs//real_freq)]
+    y = np.load(path)[T[0]*fs:T[1]*fs]
+    y = y[::int((fs//real_freq))]   #   60/real_freq
     # y = np.load(path)[24*30:24*30+totalNbr]   #debug
     t = [totalT*x/y.size for x in range(y.size)]
 
@@ -66,10 +70,10 @@ def fft(fs,totalT,path, real_freq,flag = 'half',bandpass = False,Range = None): 
 
 
 
-    pl.plot(t,y)   #   y is orignal signal
-    pl.xlabel('time(s)')
-    pl.title("original signal")
-    pl.show()
+    # pl.plot(t,y)   #   y is orignal signal
+    # pl.xlabel('time(s)')
+    # pl.title("original signal")
+    # pl.show()
 
     """
     现在对上述信号y在0-1秒时间内进行频谱分析，
@@ -104,7 +108,7 @@ def fft(fs,totalT,path, real_freq,flag = 'half',bandpass = False,Range = None): 
         M = pos_Y_from_fft.size
         f = [df*n for n in range(0,M)]
 
-        pl.plot(f,np.abs(pos_Y_from_fft))
+        pl.semilogy(f,np.abs(pos_Y_from_fft))
         pl.xlabel('freq(Hz)')
         pl.title("positiveHalf fft")
         # pl.title("fft in detail")
@@ -119,11 +123,10 @@ def fft(fs,totalT,path, real_freq,flag = 'half',bandpass = False,Range = None): 
         M = pos_Y_from_fft.size
         f = [df * n for n in range(0, M)]
 
-        pl.plot(f, np.abs(pos_Y_from_fft))
-        pl.xlabel('freq(Hz)')
-        # pl.title("positiveHalf fft")
-        pl.title("fft in detail")
-        pl.show()
+        # pl.semilogy(f, np.abs(pos_Y_from_fft))
+        # pl.xlabel('freq(Hz)')
+        # pl.title("fft in detail")
+        # pl.show()
 
     if bandpass == True:   #  只考虑half图 不考虑detail图
         # for order in [3, 6, 9]:
@@ -143,7 +146,7 @@ def fft(fs,totalT,path, real_freq,flag = 'half',bandpass = False,Range = None): 
         # t = np.linspace(0, totalT, totalNbr, endpoint=False)
         a = 0.02
         x = np.load(path)[0:totalNbr]
-        x = x[::(fs//real_freq)]
+        x = x[::int((fs//real_freq))]
         t = np.linspace(0, totalT, x.size, endpoint=False)
 
 
@@ -157,7 +160,7 @@ def fft(fs,totalT,path, real_freq,flag = 'half',bandpass = False,Range = None): 
         plt.hlines([-a, a], 0, totalT, linestyles='--')
         plt.grid(True)
         plt.axis('tight')
-        plt.legend(loc='upper left')
+        plt.legend(loc =(0.02,0.7)  )
 
         plt.show()
 
@@ -175,23 +178,29 @@ def fft(fs,totalT,path, real_freq,flag = 'half',bandpass = False,Range = None): 
 path = 'D:\Study\Datasets\\moreCam\\GFflow\\SIGS_ang.txt.npy'
 # path = 'D:\Study\Datasets\\moreCamStable\\GFflow\\SIGS_ang.txt.npy'
 
-path = 'D:\Study\Datasets\\moreCamBest\\HSflow\\SIGS_ang.txt.npy'
+# path = 'D:\Study\Datasets\\moreCamBest\\HSflow\\SIGS_mag.txt.npy'
 # D:\Study\Datasets\moreCamBestNontrembling\HSflow
 
-path = 'D:\Study\Datasets\\moreCamBestNontrembling\\HSflow\\SIGS_graybetter.txt.npy'
+path = 'D:\Study\Datasets\\moreCamBestNontrembling\\HSflow\\SIGS_ang.txt.npy'
+# path = 'D:\Study\Datasets\\test3L\\GFflow\\SIGS_mag.txt.npy'
+# path = 'D:\Study\Datasets\\moreCamBest\\HSflow\\SIGS_ang.txt.npy'
+
 
 
 # fft(25,30,path, "detail")
 # path = 'D:\Study\Datasets\\moreCam\HSflow\\SIGS_blue.txt.npy'
-fft(25,16,path,25, "detail",True,[0.25,0.45])   #max_freq 5 必须是 25 的因数
+# fft(30,15,path,10, "detail",True,[1.6,1.9])   #max_freq 5 必须是 25 的因数
 
-
+#0.25,0.50
+#introduce range?
 # 通过将第四个参数 从25 调为5  可以看到结果变得更精确和更好
 
 # freq 是真实的帧率   傅里叶变换取样的频率为 real_freq 这是能探测到的频率的上限制
 # 应该更小 以达到更精确的结果
-#心率的频率也就1.5HZ左右。是用25HZ使得fft分析的频谱过宽，精度就损失了。
+#心率的频率也就1.5HZ   呼吸 0.3左右。是用25HZ使得fft分析的频谱过宽，精度就损失了。
+
 # 最好把25HZ降到8HZ也就足够了，也就是最大测到240的心率。这样可以提高4倍精度，
 # 心率精度就在1-2之间了。
 
 
+# fft(25,[10,20],path,2.5, "detail",True,[0.1,0.3])   #max_freq 5 必须是 25 的因数  25/2.5 must be int

@@ -19,7 +19,7 @@ h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
 # Define the codec for output video
 # fourcc = cv2.VideoWriter_fourcc(*'MJPG')
 # fourcc = cv2.VideoWriter_fourcc('I', '4', '2', '0')  # （'I','4','2','0' 对应avi格式）
-fps = 30
+# fps = 30
 
 # Set up output video
 # out = cv2.VideoWriter("D:\Study\Datasets\\Stabledmorecam.avi", fourcc, fps, (w,h))

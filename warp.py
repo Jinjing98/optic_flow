@@ -79,7 +79,7 @@ def image_warp(im, flow, mode='bilinear'):   # https://blog.csdn.net/qq_33757398
     x0 = pos_x + x
     y0 = pos_y + y
 
-    x0 = np.clip(x0, zero, max_x)
+    x0 = np.clip(x0, zero, max_x)  #  对于出边界的未知信息  则取用（0，0）（max.max）位置处的像素值替代
     y0 = np.clip(y0, zero, max_y)
 
     dim1 = width * height

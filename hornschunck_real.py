@@ -159,3 +159,6 @@ print(np.array(SIGS_mag).size)
 # np.save(flow_path+"SIGS_gray.txt",SIGS_gray)
 # np.save(flow_path+"SIGS_graybetter.txt",SIGS_graybetter)
 
+
+
+

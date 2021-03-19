@@ -16,21 +16,21 @@ imgGF = cv2.imread(pathGF,cv2.IMREAD_GRAYSCALE)
 x = np.arange(256)
 
 
-# path =  "D:\Study\Datasets\hamlyn\FNerror\\"
-# pathHS =  "D:\Study\Datasets\hamlyn\HSerror\\"
-# pathGF =  "D:\Study\Datasets\hamlyn\GFerror\\"
-# initpath = path+'capture-20110222T141957Z_1.png'
-# initpathHS = pathHS+'capture-20110222T141957Z_1.png'
-# initpathGF = pathGF+'capture-20110222T141957Z_1.png'
+path =  "D:\Study\Datasets\hamlyn\FNerror\\"
+pathHS =  "D:\Study\Datasets\hamlyn\HSerror\\"
+pathGF =  "D:\Study\Datasets\hamlyn\GFerror\\"
+initpath = path+'capture-20110222T141957Z_1.png'
+initpathHS = pathHS+'capture-20110222T141957Z_1.png'
+initpathGF = pathGF+'capture-20110222T141957Z_1.png'
 
 
-#just need to edit line 57/58  and below lines
-path =  "D:\Study\Datasets\cholec80\FNerror\\"
-pathHS =  "D:\Study\Datasets\cholec80\HSerror\\"
-pathGF =  "D:\Study\Datasets\cholec80\GFerror\\"
-initpath = path+'video01_1.png'
-initpathHS = pathHS+'video01_1.png'
-initpathGF = pathGF+'video01_1.png'
+# #just need to edit line 57/58  and below lines
+# path =  "D:\Study\Datasets\cholec80\FNerror\\"
+# pathHS =  "D:\Study\Datasets\cholec80\HSerror\\"
+# pathGF =  "D:\Study\Datasets\cholec80\GFerror\\"
+# initpath = path+'video01_1.png'
+# initpathHS = pathHS+'video01_1.png'
+# initpathGF = pathGF+'video01_1.png'
 
 
 
@@ -54,8 +54,8 @@ for f_name in os.listdir(pathGF):
 x = np.arange(256)
 
 
-# totalNum = 512*256*(num-35)+256*256*6*5+256*192*1*5
-totalNum = 768*384*num
+totalNum = 512*256*(num-35)+256*256*6*5+256*192*1*5
+# totalNum = 768*384*num
 
 
 
@@ -142,6 +142,8 @@ plt.ylabel('probability')
 plt.xlabel('error')
 plt.title( '\n'+"PMF of error  ")
 plt.show()
+print(max(hist/totalNum),min(hist/totalNum))
+print(hist/totalNum)
 
 # plt.step(x,cum_hist/totalNum,color="b",lw=1)
 # plt.title("cdf of error")
@@ -254,8 +256,8 @@ plt.step(x,cum_hist/totalNum,color="b",lw=1)
 plt.title("cdf of error")
 plt.grid()
 plt.show()
-
-
+print(max(cum_hist/totalNum),min(cum_hist/totalNum))
+print(cum_hist/totalNum)
 meanError = np.mean(imgHS)
 # 这两个指标定义error出现的数量
 preciseRateStrict = cum_histHS[0]/totalNum     #define a error when it is not zero   strict error

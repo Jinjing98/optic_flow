@@ -178,8 +178,8 @@ def GF(videopath,flow_path,sigpath,range):
 		double_representation = cv2.addWeighted(rgb_representation, 3, frame2, 0.5, 0)
 
 		cv2.imshow('result_window', double_representation)
-		# cv2.imshow('result_window', rgb_representation)
-		cv2.imwrite(flow_path + str(i) + '.png', rgb_representation)
+		cv2.imshow('result_window', rgb_representation)
+		#cv2.imwrite(flow_path + str(i) + '.png', rgb_representation)
 
 		kk = cv2.waitKey(20) & 0xff
 		# Press 'e' to exit the video
@@ -196,3 +196,109 @@ def GF(videopath,flow_path,sigpath,range):
 	np.save(sigpath+"GFSIGS_mag.txt",SIGS_mag)
 	np.save(sigpath+"SIGS_gray.txt",SIGS_gray)
 	np.save(sigpath+"SIGS_graybetter.txt",SIGS_graybetter)
+
+
+def GF_window(videopath,sigpath,ranges,gridnumX,gridnumY):
+	cap = cv2.VideoCapture(videopath)
+	width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+	height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+	fps = int(cap.get(cv2.CAP_PROP_FPS))
+	_, frame1 = cap.read()
+	prvs = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
+
+	lower =  fps*ranges[0]
+	upper =  fps*ranges[1]
+	framenum = upper - lower
+	hsv_mask = np.zeros_like(frame1)
+	hsv_mask[..., 1] = 255
+
+	gridWidth = int(width / gridnumX)  # int 0.6 = 0; 320  required to be zhengchu, but if not, then directly negelact the boundary
+	gridHeight = int(height / gridnumY)  # 240
+	SIGS_gray = np.zeros((framenum,gridnumY,gridnumX))#4,3
+	SIGS_ang = np.zeros((framenum,gridnumY,gridnumX))
+	SIGS_mag = np.zeros((framenum,gridnumY,gridnumX))
+
+
+	i = 1
+	timepoint = 0
+	# Till you scan the video
+	while (i):
+		start1 = time.time()
+		# Capture another frame and convert to gray scale
+		ret, frame2 = cap.read()
+		if i < lower:  #   直接从好帧开始运行
+		    i += 1
+		    continue
+		if i > upper:
+			break
+		if ret != True:
+			break
+		next = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
+
+
+
+		start = time.time()
+		flow = cv2.calcOpticalFlowFarneback(prvs, next, None, pyr_scale=0.5, levels=3, winsize=5, iterations=5, poly_n=5,
+											   poly_sigma=1.1, flags=0)
+		end = time.time()
+		print("flow computing time: " + str(end - start))
+
+		mag, ang = cv2.cartToPolar(flow[..., 0], flow[..., 1],angleInDegrees= False)   #in radians not degrees
+		hsv_mask[..., 0] = ang * 180 / np.pi / 2
+		# Set value as per the normalized magnitude of optical flow      Value 3rd d of hsv
+		hsv_mask[..., 2] = cv2.normalize(mag, None, 0, 255,
+										 cv2.NORM_MINMAX)  # nolinear transformation of value   sigmoid?
+		# var = hsv_mask[..., 2] - mag
+
+		start = time.time()
+		# for idx_x in range(gridnumX):#how to speed up when it is getting finner
+		# 	for idx_y in range(gridnumY):
+		# 		#print(idx_y,idx_x)
+		# 		#print(idx_y*gridHeight,(idx_y+1)*gridHeight, idx_x*gridWidth,(idx_x+1)*gridWidth)
+		#
+		# 		win_img = next[idx_y*gridHeight:(idx_y+1)*gridHeight, idx_x*gridWidth:(idx_x+1)*gridWidth]
+		#
+		# 		#print(np.mean(win_img))
+		# 		#print(idx_y,idx_x)
+		# 		SIGS_gray[timepoint,idx_y,idx_x] = np.mean(win_img)
+		# 		SIGS_ang[timepoint,idx_y,idx_x] = np.mean(hsv_mask[..., 0])
+		# 		SIGS_mag[timepoint,idx_y,idx_x] = np.mean(hsv_mask[..., 2])
+		#before it took around 3 mins, now it is way faster based on numpy vectorization
+		#https://codingdict.com/questions/179693
+		print(next)
+		next = next.reshape(gridnumY,gridHeight,gridnumX,gridWidth)
+		next_ang = hsv_mask[..., 0].reshape(gridnumY,gridHeight,gridnumX,gridWidth)
+		next_mag = hsv_mask[..., 2].reshape(gridnumY,gridHeight,gridnumX,gridWidth)
+		print(next[0,:,0,:])
+		SIGS_gray[timepoint] = next.mean(axis=(1, 3))  # y.mean(axis=(1,3))
+		# print(meanvalue.shape)#48 72
+		SIGS_ang[timepoint] = next_ang.mean(axis=(1, 3))
+		SIGS_mag[timepoint] = next_mag.mean(axis=(1, 3))
+
+
+
+
+		end = time.time()
+		print('mean signal collections for windows' + str(end - start))
+
+
+
+				#cv2.imshow("cropped", win_img)
+				#cv2.waitKey(0)
+		timepoint += 1
+		#print(SIGS_gray[timepoint-1])
+		i += 1
+		end1 = time.time()
+		print("total time: " + str(end1 - start1))
+
+	print(SIGS_gray[:, 1, 1])  # the list for block 1,1
+	print(np.array(SIGS_ang).size)
+	print(np.array(SIGS_mag).size)
+	#np.save(sigpath+"GFSIGS_ang.txt",SIGS_ang)
+	#np.save(sigpath+"GFSIGS_mag.txt",SIGS_mag)
+	np.save(sigpath,SIGS_gray)
+
+
+
+#GF_window("D:\Study\Datasets\signalVideos\staticCam\card1.avi","","",[0,1],8,8)  # WE DO NOT NEED TO COMPUTE FOR EACH FRAME WHEN COLLECT ARRAY DATA
+

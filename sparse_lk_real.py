@@ -3,7 +3,10 @@ import cv2
 
 cap = cv2.VideoCapture("D:\Study\Datasets\\video64.mp4")
 # cap = cv2.VideoCapture("D:\Study\Datasets\\noisy64.mp4")
-cap = cv2.VideoCapture("D:\Study\Datasets\\test1L.mp4")
+cap = cv2.VideoCapture("D:\Study\Datasets\\morecam.mp4")
+# cap = cv2.VideoCapture('D:\Study\Datasets\signalVideos\staticCam\\pptcardNresp_turbG2.avi')
+
+
 # cap = cv2.VideoCapture(0)
 
 # ShiTomas角点检测的参数
@@ -28,6 +31,7 @@ while(1):
     p0 = cv2.goodFeaturesToTrack(old_gray, mask=None, **feature_params)#compute feature points just for one time
     init_size = np.size(p0)
     mask = np.zeros_like(old_frame)
+    j = 1
 
     while (1):
         ret, frame = cap.read()
@@ -60,6 +64,8 @@ while(1):
         img = cv2.add(frame2, frame)
 
         cv2.imshow('frame', img)
+        j += 1
+        cv2.imwrite("D:\Study\Datasets\signalVideos\\test\\"+str(j)+".png",img)
         k = cv2.waitKey(30) & 0xff
         if k == 27:
             break

@@ -31,10 +31,10 @@ if __name__ == '__main__':
     # save_path = '../Datasets/surgery_test/noisy_test_result/'
     # pic2video('../Datasets/surgery_test/noisy_test_result/',(512, 384))
     # pic2video('D:\Study\\Datasets\\moreCamBest\\NNflow\\',(512,384))
-    pic2video('D:\Study\\Datasets\\moreCamBestNontrembling\\set\\',(124,94))
+    #pic2video('D:\Study\\Datasets\\moreCamBestNontrembling\\set\\',(124,94))
     # pic2video('D:\Study\\Datasets\\moreCamBest\\GFflow\\',(124,94))
-
-    # pic2video('D:\Study\Datasets\moreCamStable\stable\\', (720,288))
+    # pic2video('D:\Study\\Datasets\\moreCamBestNontrembling\\set\\', (124, 94))
+    pic2video('D:\Study\Datasets\signalVideos\\test\\', (720,288))
 
 
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import numpy as np
 import cv2
-from frames2video import pic2video
+#from frames2video import pic2video
 import warnings
 import torch
 import numpy as np
@@ -14,16 +14,17 @@ import matplotlib.pyplot as plt
 
 
 flow_path = "D:\Study\Datasets\\Cam\\NNflow\\"
-flow_path = "D:\Study\\Datasets\\moreCamBest\\NNflow\\"
+flow_path = "D:\Study\Datasets\signalVideos\staticCam\\test"
 
 
 
 # crop_size = (768, 512)
 crop_size = (512, 384)
+crop_size = (324,274)
 
 # cap = cv2.VideoCapture("D:\Study\Datasets\\video64.mp4")
 # cap = cv2.VideoCapture("D:\Study\Datasets\\noisy64.mp4")
-cap = cv2.VideoCapture("D:\Study\Datasets\\test3L.mp4")
+cap = cv2.VideoCapture("D:\Study\Datasets\signalVideos\staticCam\\pptcardNresp_turbG2.avi")
 # cap = cv2.VideoCapture("D:\Study\Datasets\\test1L.mp4")
 # cap = cv2.VideoCapture(0)
 # cap = cv2.VideoCapture("D:\Study\\Datasets\\moreCamBest.mp4")
@@ -132,8 +133,8 @@ while (i):
 
     # rgb_representation = cv2.cvtColor(hsv_mask, cv2.COLOR_HSV2BGR)
     double_representation = cv2.addWeighted(img,0.5,pim2, 0.5, 0)
-    # cv2.imshow("window",double_representation)
-    # cv2.imwrite(flow_path + str(i) + '.png', img)
+    cv2.imshow("window",double_representation)
+    cv2.imwrite(flow_path + str(i) + '.png', img)
     cv2.imshow("window", img)
     kk = cv2.waitKey(20) & 0xff  #实时可视化光流图片，（人自己写好了flow2img函数）
     # Press 'e' to exit the video

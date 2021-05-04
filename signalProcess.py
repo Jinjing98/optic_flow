@@ -1,10 +1,15 @@
 import numpy as np
 import pylab as pl
 import math
+import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.signal import freqz
 from scipy.signal import butter, lfilter
+import time
+import pylab as plt
+from scipy import stats
+
 
 
 #考虑滑动均值滤波和带通滤波进一步优化  可视化频率   （已知区间  PCA  可信度衡量 统计学
@@ -164,10 +169,184 @@ def fft(fs,T,path, real_freq,flag = 'half',bandpass = False,Range = None,):   # 
 
         plt.show()
 
+def test_strategy4window(array_1d,df,given):#z = 6#test_strategy4window(array_3d_best12idx_value_freq[:,i,j],df,given)
+    # edit mask layer6 of the array_3c
+    if(array_1d[2]>2*array_1d[3]):
+        array_1d[5] = 1
+
+def test_strategy4windowGloInit(thr4str,array_3d,df,given):
+    mask = np.array(array_3d[2] > thr4str * array_3d[3], dtype=int)
+    array_3d[5] = mask  #
+
+#if you are sure it is big organ mode, by seeting the flag to true can make the result more convincing!
+#if you have given approxmate freq, by setting given to the non zero value, can make the result more convincing!
+def test_strategy4windowGlo(thr4str,thr4df,array_3d,df,given):#z = 6#test_strategy4window(array_3d_best12idx_value_freq[:,i,j],df,given)
+    # edit mask layer6 of the array_3c
+
+    thr4str = 1.2
+    thr4df = 5
+    if given:
+        mask1 = np.array((array_3d[4] <= given+thr4df*df), dtype=int)
+        mask2 = np.array((array_3d[4] >= given-thr4df*df), dtype=int)
+        mask3 = np.array((mask1 == 1) & (mask2 == 1), dtype=int)
+    else:
+        mask3 = array_3d[5]
+
+    # counts = np.bincount(array_3d[4,1,1:5])
+    # mostcommon = np.argmax(counts)
+    # print("the most frequent frequncy value : ",mostcommon)
+    mostcommon,times = stats.mode(array_3d[4], axis=None)
+    print(mostcommon,times)
+    if mostcommon < given - 2*df or mostcommon > given + 2*df:
+        print("the periodic is relatively weak to be confidently detected! Find another ")
+        return False
 
 
 
 
+
+
+
+    #print(array_3d[5])
+    print(array_3d.shape)# 6 48 72
+    print(array_3d[2].shape) #48,72
+    print(array_3d[2])
+    print(thr4str*array_3d[3])# this times is not good !
+    print(df)
+    #print(array_3d[2]>2*array_3d[3])# or + df?
+    mask4 = np.array(array_3d[2]>thr4str*array_3d[3],dtype=int)
+    mask = np.array((mask3 == 1) & (mask4 == 1), dtype=int)
+    print(mask == mask4)
+
+    #mask = np.uint8(mask)
+    array_3d[5] = mask#  change it to mask, the result get improved, as you can see the boundary is not wrongly regarded as info region
+    #array([ True, False,  True], dtype=bool)
+
+
+
+
+
+
+def visulmask(path4array,imgx,imgy,numx,numy):
+    gridwidth = int(imgx/numx)
+    gridheight = int(imgy/numy)
+    mask_2d = np.load(path4array)[5]
+    print(mask_2d.shape)#12 18
+    print(mask_2d)
+    # print(np.nonzero(mask_2d))
+    #print(np.nonzero(mask_2d)[0])#189
+    y_idx = np.nonzero(mask_2d)[0]
+    x_idx = np.nonzero(mask_2d)[1]
+    white = [255,255,255]
+    mask_2d = np.zeros((imgy,imgx))
+
+    for y,x in zip(y_idx, x_idx):
+
+            #print(y*gridheight,(y+1)*gridheight,x*gridwidth,(x+1)*gridwidth)
+            mask_2d[y*gridheight:(y+1)*gridheight,x*gridwidth:(x+1)*gridwidth] = 1
+    cv2.imshow("",mask_2d)
+    cv2.waitKey(0)
+    # return np.uint8(mask_2d)
+    return mask_2d
+
+def playvideowithmask(videopath, mask,outimgpath):
+    cap = cv2.VideoCapture(videopath)
+    while 1:
+        ret, frame = cap.read()  # 如果想保存光流图片，以备后面调用flames2video得到光流video.
+        if ret!=True:
+            break
+
+        # double_representation = mask+frame#cv2.addWeighted(frame, 1, 255-mask, 1, 0.2,dtype = cv2.CV_32F)
+        frame = cv2.bitwise_and(frame, frame, mask=np.uint8(mask))
+
+
+
+        cv2.imshow("window", frame)
+
+        kk = cv2.waitKey(20) & 0xff  # 实时可视化光流图片，（人自己写好了flow2img函数）
+        # Press 'e' to exit the video
+        if kk == ord('e'):
+            cv2.imwrite(outimgpath,frame)
+            break
+
+
+
+
+
+
+
+
+#visulmask("D:\Study\\flownet2-pytorch\infoMat_6height.npy",360,288,20,24)#360 288
+
+
+
+
+def fft_window(fs, T, path4signal,infoMatPath, real_freq, flag='half', bandpass=False, Range=None, ):  # 默认为half
+
+    totalT = (T[1] - T[0])
+
+    totalNbr = fs * totalT
+
+    # jinjing test
+    real_totalNbr = real_freq * totalT
+
+    # 采样步长
+    # t = [x/fs for x in range(totalNbr)]
+
+    array_3d = np.load(path4signal)
+    num4Timepoints = array_3d.shape[0]
+    num4indexY =  array_3d.shape[1]
+    num4indexX =  array_3d.shape[2]
+    print(array_3d.shape[0], num4indexX, num4indexY)#625 8 8
+    array_3d_best12idx_value_freq = np.ones((6,num4indexY,num4indexX))  # index1,2 value1,2 freq 1,2 for most n seconded strong freq
+    array_3d_best12freqvalue = np.ones((2, num4indexY, num4indexX))
+    start = time.time()
+    for i in range(num4indexY):
+        for j in range(num4indexX):
+            list_2d = array_3d[:,i,j]
+            y = list_2d[T[0] * fs:T[1] * fs]
+            y = y[::int((fs // real_freq))]  # 60/real_freq
+            # # 分辨率
+            df = real_freq / (real_totalNbr - 1)  # 0.03HZ
+            Y = np.fft.fft(y) * 2 / real_totalNbr  # *2/N 反映了FFT变换的结果与实际信号幅值之间的关系
+
+
+            if flag:
+                pos_Y_from_fft = Y[:Y.size // 2]  # 10  2
+                # print(np.argsort(-np.abs(pos_Y_from_fft)))
+                # print(np.abs(pos_Y_from_fft))
+                # print(pos_Y_from_fft.size)
+                order_list = np.argsort(-np.abs(pos_Y_from_fft))
+                array_3d_best12idx_value_freq[:,i,j] = [order_list[1],order_list[2],
+                                                        np.abs(pos_Y_from_fft)[order_list[1]],
+                                                        np.abs(pos_Y_from_fft)[order_list[2]],
+                                                        order_list[1]*df,0]
+                #print(array_3d_best12idx_value_freq[:,i,j][5])
+                #test_strategy4window(array_3d_best12idx_value_freq[:,i,j],df,given = 1.02)
+                #print(array_3d_best12idx_value_freq[:,i,j])
+                # array_3d_best12idx_value_freq[0,i,j] = order_list[1]
+                # array_3d_best12idx_value_freq[1,i,j] = order_list[2]
+                # array_3d_best12idx_value_freq[2,i,j] = np.abs(pos_Y_from_fft)[order_list[1]]
+                # array_3d_best12idx_value_freq[3,i,j] = np.abs(pos_Y_from_fft)[order_list[2]]
+                # array_3d_best12idx_value_freq[4,i,j] = order_list[1]*df #result
+                # array_3d_best12idx_value_freq[5,i,j] = 0 #mask 0/1
+
+                # M = pos_Y_from_fft.size
+                # f = [df * n for n in range(0, M)]
+                #
+                # pl.semilogy(f, np.abs(pos_Y_from_fft))
+                # pl.xlabel('freq(Hz)')
+                # pl.title("positiveHalf fft")
+                # pl.title("fft in detail")
+                # pl.show()
+
+    test_strategy4windowGlo(1.2,5,array_3d_best12idx_value_freq,df,1.02)
+    end = time.time()
+    print('fft time for all windows: ' + str(end - start))
+    print(array_3d_best12idx_value_freq[4,:,:])
+    print(array_3d_best12idx_value_freq[5,:,:])
+    np.save(infoMatPath,array_3d_best12idx_value_freq)#
+    return df
 
 
 
@@ -203,4 +382,4 @@ path = 'D:\Study\Datasets\\moreCamBestNontrembling\\HSflow\\SIGS_ang.txt.npy'
 # 心率精度就在1-2之间了。
 
 
-# fft(25,[10,20],path,2.5, "detail",True,[0.1,0.3])   #max_freq 5 必须是 25 的因数  25/2.5 must be int
+#fft_window(25,[0,20],"D:\Study\\flownet2-pytorch\SIGS_gray.txt.npy",2.5, "detail",True,[0.1,0.3])   #max_freq 5 必须是 25 的因数  25/2.5 must be int

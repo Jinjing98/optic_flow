@@ -113,4 +113,5 @@ while (i):
     #    plt.show()
     i = i + 1
     prvs = next
-pic2video(path,crop_size)
+# pic2video(path,crop_size)
+# pic2video(path,crop_size)

@@ -291,7 +291,7 @@ def GF_window(videopath,sigpath,ranges,gridnumX,gridnumY):
 		end1 = time.time()
 		print("total time: " + str(end1 - start1))
 
-	print(SIGS_gray[:, 1, 1])  # the list for block 1,1
+	#print(SIGS_gray[:, 1, 1])  # the list for block 1,1
 	print(np.array(SIGS_ang).size)
 	print(np.array(SIGS_mag).size)
 	#np.save(sigpath+"GFSIGS_ang.txt",SIGS_ang)

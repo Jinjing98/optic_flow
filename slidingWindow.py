@@ -1,33 +1,68 @@
 from HS_GF_FN_func import HS,GF,GF_window
-from signalProcess import fft_window,visulmask,playvideowithmask
+from signalProcess import fft_window,visul_savemask,playvideowithmask
 import cv2
 import numpy as np
-from PIL import Image
 
-videopath = "D:\Study\Datasets\extension\card1\card1.avi"""
 
-meansigarrayDIR = "D:\Study\Datasets\extension\card1\size72_48\\"
-meansigarrayPath = meansigarrayDIR+"SIGS_gray_72_48.npy"
 
-infoMatDIR = "D:\Study\Datasets\extension\card1\size72_48\\"
-infoMatPath = infoMatDIR+ "infoMat_6height_72_48.npy"
+imgx = 360#720#360
+imgy = 288
+gridnumx = 36#36#18#360#180#18#36#72
+gridnumy = 24#24#12#288#144#12#24#48
+thr4str = 1.1#1.2  bigger stricter   1.0  make no sense
+thr4df = 1#10  #df~0.05 10is an acceptable decent value for this param 0 means exactly equal,
+# since it is float, then get an empty mask. smaller stricter  100 make no sense
+#when you are pefectly sure, set this to 1/2
+String0 = str(gridnumx)+"_"+str(gridnumy)
+String = str(gridnumx)+"_"+str(gridnumy)+"_"+str(thr4str)+"_"+str(thr4df)
+fps = 25
+realfreq4samples = 5#1#5 # this value should be cautious, the half of it should be bigger than the approomate given freq
+time_range = [0,20]#[0,15]#[0,20]
+givenfreq = 1.5#0.4#1.5
+videoname = "card1"#"resp1"#"card1"# \"+videoname+"
 
-mask_path = "D:\Study\Datasets\extension\card1\size72_48\Mask72_48.png"
-mask_img_path = "D:\Study\Datasets\extension\card1\size72_48\mask_img72_48.png"
+
+
+videopath = "D:\Study\Datasets\extension\\"+videoname+"\\"+videoname+".avi"
+
+meansigarrayDIR = "D:\Study\Datasets\extension\\"+videoname+"\size"+String0+"\\"
+meansigarrayPath = meansigarrayDIR+"SIGS_gray"+String0+".npy"
+
+infoMatDIR = "D:\Study\Datasets\extension\\"+videoname+"\size"+String0+"\\"
+infoMatPath = infoMatDIR+ "infoMat_6height"+String+".npy"
+
+mask_path = "D:\Study\Datasets\extension\\"+videoname+"\size"+String0+"\Mask"+String+".png"  #  the best mask!
+mask_img_path = "D:\Study\Datasets\extension\\"+videoname+"\size"+String0+"\mask_img"+String+".png"
+
+maskDir = "D:\Study\Datasets\extension\\"+videoname+"\size"+String+"\\"
+
+
+
+
+
+
+
+
+
+
+
 
 
 
 
 #save mean sig array
-GF_window(videopath,meansigarrayPath,[0,20],144,96)  # 72 grids on x,WE DO NOT NEED TO COMPUTE FOR EACH FRAME WHEN COLLECT ARRAY DATA
+#GF_window(videopath,meansigarrayPath,time_range,gridnumx,gridnumy)  # 72 grids on x,WE DO NOT NEED TO COMPUTE FOR EACH FRAME WHEN COLLECT ARRAY DATA
 #based on sig array, get the raw z(6) array  about the fft result WITH  mask(including test strategy)
-df = fft_window(25,[0,20],meansigarrayPath,infoMatPath,2.5, "detail",True,[0.1,0.3])   #max_freq 5 必须是 25 的因数  25/2.5 must be int
+df = fft_window(givenfreq,thr4str,thr4df,fps,time_range,meansigarrayPath,infoMatPath,realfreq4samples, "detail",True,[0.1,0.3])   #max_freq 5 必须是 25 的因数  25/2.5 must be int
+#test stage for the 5th layer of infoMat, set 0/1 for the 5th layer
+
+
 # visulise the mask
-mask2d = visulmask(infoMatPath,360,288,144,96)
+mask2d = visul_savemask(maskDir,mask_path,infoMatPath,imgx,imgy,gridnumx,gridnumy)
 print(mask2d.shape)
 #https://stackoverflow.com/questions/7587490/converting-numpy-array-to-opencv-array
-mask2d_gray = cv2.cvtColor(mask2d.astype(np.float32)*255, cv2.COLOR_GRAY2BGR)
-cv2.imwrite(mask_path,mask2d_gray)
+# mask2d_gray = cv2.cvtColor(mask2d.astype(np.float32)*255, cv2.COLOR_GRAY2BGR)
+# cv2.imwrite(mask_path,mask2d_gray)
 #visualise video with the mask
 playvideowithmask(videopath,mask2d,mask_img_path)
 

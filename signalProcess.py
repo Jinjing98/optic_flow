@@ -178,28 +178,48 @@ def test_strategy4windowGloInit(thr4str,array_3d,df,given):
     mask = np.array(array_3d[2] > thr4str * array_3d[3], dtype=int)
     array_3d[5] = mask  #
 
+def test_strategy(thr4str,thr4df,path4array3d,df,given,flag):
+    array_3d = np.load(path4array3d)
+    mask2d = array_3d[5]   #initially all 0
+    if flag == False:
+        return
+    mostcommon, times = stats.mode(array_3d[4], axis=None)
+    print(mostcommon, times)
+
+
+
+
+
+
+
+    np.save(path4array3d, array_3d)  #
+
+
+
+
 #if you are sure it is big organ mode, by seeting the flag to true can make the result more convincing!
 #if you have given approxmate freq, by setting given to the non zero value, can make the result more convincing!
 def test_strategy4windowGlo(thr4str,thr4df,array_3d,df,given):#z = 6#test_strategy4window(array_3d_best12idx_value_freq[:,i,j],df,given)
     # edit mask layer6 of the array_3c
 
-    thr4str = 1.2
-    thr4df = 5
+
     if given:
         mask1 = np.array((array_3d[4] <= given+thr4df*df), dtype=int)
         mask2 = np.array((array_3d[4] >= given-thr4df*df), dtype=int)
         mask3 = np.array((mask1 == 1) & (mask2 == 1), dtype=int)
     else:
         mask3 = array_3d[5]
+    #print(array_3d[4,])#float 64
+    #print(array_3d[4,1,1:5])
 
-    # counts = np.bincount(array_3d[4,1,1:5])
+    # counts = np.bincount(array_3d[4,1])
     # mostcommon = np.argmax(counts)
     # print("the most frequent frequncy value : ",mostcommon)
     mostcommon,times = stats.mode(array_3d[4], axis=None)
     print(mostcommon,times)
-    if mostcommon < given - 2*df or mostcommon > given + 2*df:
-        print("the periodic is relatively weak to be confidently detected! Find another ")
-        return False
+    # if mostcommon < given - 2*df or mostcommon > given + 2*df:
+    #     print("the periodic is relatively weak to be confidently detected! Find another ")
+    #     return False
 
 
 
@@ -214,9 +234,36 @@ def test_strategy4windowGlo(thr4str,thr4df,array_3d,df,given):#z = 6#test_strate
     print(thr4str*array_3d[3])# this times is not good !
     print(df)
     #print(array_3d[2]>2*array_3d[3])# or + df?
-    mask4 = np.array(array_3d[2]>thr4str*array_3d[3],dtype=int)
+    mask4 = np.array(array_3d[2]>thr4str*array_3d[3],dtype=int)#INT32
     mask = np.array((mask3 == 1) & (mask4 == 1), dtype=int)
-    print(mask == mask4)
+    #print(mask == mask4)
+
+
+
+    #形态学操作去噪声 去孔洞
+    mask_img = mask.astype(np.float32) * 255
+    # mask_img = cv2.cvtColor(mask.astype(np.float32) * 255, cv2.COLOR_GRAY2BGR)
+    cv2.imshow("before", mask_img)
+    cv2.waitKey(0)
+    # cv2.imwrite(mask_path, mask_img)
+    kernel4E = np.ones((2, 2), np.uint8)
+    kernel4E2 = np.ones((4, 4), np.uint8)
+    kernel4D = np.ones((4, 4), np.uint8)
+    mask_img = cv2.erode(mask_img, kernel4E, iterations=1)
+    mask_img = cv2.dilate(mask_img,kernel4D,iterations=1)
+    mask_img = cv2.erode(mask_img, kernel4E2, iterations=2)
+    # mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel,iterations=1)#(mask_img,kernel,iterations=1)#
+    # mask_img = cv2.morphologyEx(mask_img,cv2.MORPH_CLOSE,kernel,iterations=1)
+    cv2.imshow("after",mask_img)
+    cv2.waitKey(0)
+    # cv2.imshow("",mask_img)
+    # cv2.waitKey(0)
+
+
+
+
+
+
 
     #mask = np.uint8(mask)
     array_3d[5] = mask#  change it to mask, the result get improved, as you can see the boundary is not wrongly regarded as info region
@@ -227,7 +274,7 @@ def test_strategy4windowGlo(thr4str,thr4df,array_3d,df,given):#z = 6#test_strate
 
 
 
-def visulmask(path4array,imgx,imgy,numx,numy):
+def visul_savemask(maskDir,mask_path,path4array,imgx,imgy,numx,numy):
     gridwidth = int(imgx/numx)
     gridheight = int(imgy/numy)
     mask_2d = np.load(path4array)[5]
@@ -244,9 +291,13 @@ def visulmask(path4array,imgx,imgy,numx,numy):
 
             #print(y*gridheight,(y+1)*gridheight,x*gridwidth,(x+1)*gridwidth)
             mask_2d[y*gridheight:(y+1)*gridheight,x*gridwidth:(x+1)*gridwidth] = 1
-    cv2.imshow("",mask_2d)
-    cv2.waitKey(0)
+    #cv2.imshow("",mask_2d)
+    #cv2.waitKey(0)
     # return np.uint8(mask_2d)
+
+    mask2d_gray = cv2.cvtColor(mask_2d.astype(np.float32)*255, cv2.COLOR_GRAY2BGR)
+    cv2.imwrite(mask_path,mask2d_gray)
+
     return mask_2d
 
 def playvideowithmask(videopath, mask,outimgpath):
@@ -281,7 +332,7 @@ def playvideowithmask(videopath, mask,outimgpath):
 
 
 
-def fft_window(fs, T, path4signal,infoMatPath, real_freq, flag='half', bandpass=False, Range=None, ):  # 默认为half
+def fft_window(givenfreq,thr4str,thr4df,fs, T, path4signal,infoMatPath, real_freq, flag='half', bandpass=False, Range=None, ):  # 默认为half
 
     totalT = (T[1] - T[0])
 
@@ -320,7 +371,7 @@ def fft_window(fs, T, path4signal,infoMatPath, real_freq, flag='half', bandpass=
                 array_3d_best12idx_value_freq[:,i,j] = [order_list[1],order_list[2],
                                                         np.abs(pos_Y_from_fft)[order_list[1]],
                                                         np.abs(pos_Y_from_fft)[order_list[2]],
-                                                        order_list[1]*df,0]
+                                                        order_list[1]*df,0]  #  set mask layer to 0 intially   ?
                 #print(array_3d_best12idx_value_freq[:,i,j][5])
                 #test_strategy4window(array_3d_best12idx_value_freq[:,i,j],df,given = 1.02)
                 #print(array_3d_best12idx_value_freq[:,i,j])
@@ -340,11 +391,13 @@ def fft_window(fs, T, path4signal,infoMatPath, real_freq, flag='half', bandpass=
                 # pl.title("fft in detail")
                 # pl.show()
 
-    test_strategy4windowGlo(1.2,5,array_3d_best12idx_value_freq,df,1.02)
+
+    test_strategy4windowGlo(thr4str,thr4df,array_3d_best12idx_value_freq,df,givenfreq)
     end = time.time()
     print('fft time for all windows: ' + str(end - start))
-    print(array_3d_best12idx_value_freq[4,:,:])
-    print(array_3d_best12idx_value_freq[5,:,:])
+    #print(array_3d_best12idx_value_freq[4,:,:])
+    #print(array_3d_best12idx_value_freq[5,:,:])
+
     np.save(infoMatPath,array_3d_best12idx_value_freq)#
     return df
 

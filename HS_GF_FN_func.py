@@ -229,7 +229,7 @@ def GF_window(videopath,sigpath,ranges,gridnumX,gridnumY):
 		if i < lower:  #   直接从好帧开始运行
 		    i += 1
 		    continue
-		if i > upper:
+		if i >= upper:
 			break
 		if ret != True:
 			break
@@ -265,11 +265,12 @@ def GF_window(videopath,sigpath,ranges,gridnumX,gridnumY):
 		# 		SIGS_mag[timepoint,idx_y,idx_x] = np.mean(hsv_mask[..., 2])
 		#before it took around 3 mins, now it is way faster based on numpy vectorization
 		#https://codingdict.com/questions/179693
-		print(next)
+		#print(next)
 		next = next.reshape(gridnumY,gridHeight,gridnumX,gridWidth)
 		next_ang = hsv_mask[..., 0].reshape(gridnumY,gridHeight,gridnumX,gridWidth)
 		next_mag = hsv_mask[..., 2].reshape(gridnumY,gridHeight,gridnumX,gridWidth)
-		print(next[0,:,0,:])
+		#print(next[0,:,0,:])
+
 		SIGS_gray[timepoint] = next.mean(axis=(1, 3))  # y.mean(axis=(1,3))
 		# print(meanvalue.shape)#48 72
 		SIGS_ang[timepoint] = next_ang.mean(axis=(1, 3))

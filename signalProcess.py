@@ -238,26 +238,29 @@ def test_strategy4windowGlo(thr4str,thr4df,array_3d,df,given):#z = 6#test_strate
     mask = np.array((mask3 == 1) & (mask4 == 1), dtype=int)
     #print(mask == mask4)
 
+    array_3d[6] = mask
 
 
+# processing “mask" again!
     #形态学操作去噪声 去孔洞
     mask_img = mask.astype(np.float32) * 255
     # mask_img = cv2.cvtColor(mask.astype(np.float32) * 255, cv2.COLOR_GRAY2BGR)
     cv2.imshow("before", mask_img)
-    cv2.waitKey(0)
-    # cv2.imwrite(mask_path, mask_img)
-    kernel4E = np.ones((2, 2), np.uint8)
-    kernel4E2 = np.ones((4, 4), np.uint8)
-    kernel4D = np.ones((4, 4), np.uint8)
+    cv2.waitKey(0)  #2 4 4   1 1 2
+    kernel4E = np.ones((2, 2), np.uint8)#去白点噪声，应该一直很小
+    kernel4D = np.ones((4, 4), np.uint8)#thick to original+去黑点（孔洞）  密集的话应该来多轮or增大此kernel  或者这两个参数都略微提高结果最好！
+    kernel4E2 = np.ones((4, 4), np.uint8)#before this, make sure u have kicked out all the white/black particles
     mask_img = cv2.erode(mask_img, kernel4E, iterations=1)
-    mask_img = cv2.dilate(mask_img,kernel4D,iterations=1)
-    mask_img = cv2.erode(mask_img, kernel4E2, iterations=2)
-    # mask_img = cv2.morphologyEx(mask_img, cv2.MORPH_OPEN, kernel,iterations=1)#(mask_img,kernel,iterations=1)#
-    # mask_img = cv2.morphologyEx(mask_img,cv2.MORPH_CLOSE,kernel,iterations=1)
-    cv2.imshow("after",mask_img)
+    cv2.imshow("Ero", mask_img)
     cv2.waitKey(0)
-    # cv2.imshow("",mask_img)
-    # cv2.waitKey(0)
+    mask_img = cv2.dilate(mask_img,kernel4D,iterations=5)#密集的话应该这里来多轮迭代or增大此kernel4d  或者这两个参数都略微提高结果最好！
+    cv2.imshow("Dil", mask_img)
+    cv2.waitKey(0)
+    mask_img = cv2.erode(mask_img, kernel4E2, iterations=2)
+    cv2.imshow("final",mask_img)
+    cv2.waitKey(0)
+    mask = (mask_img/255.0).astype(np.int32)
+
 
 
 
@@ -274,7 +277,7 @@ def test_strategy4windowGlo(thr4str,thr4df,array_3d,df,given):#z = 6#test_strate
 
 
 
-def visul_savemask(maskDir,mask_path,path4array,imgx,imgy,numx,numy):
+def visul_savemask(maskDir,mask_path,mask_pathNO,path4array,imgx,imgy,numx,numy):
     gridwidth = int(imgx/numx)
     gridheight = int(imgy/numy)
     mask_2d = np.load(path4array)[5]
@@ -284,40 +287,64 @@ def visul_savemask(maskDir,mask_path,path4array,imgx,imgy,numx,numy):
     #print(np.nonzero(mask_2d)[0])#189
     y_idx = np.nonzero(mask_2d)[0]
     x_idx = np.nonzero(mask_2d)[1]
-    white = [255,255,255]
     mask_2d = np.zeros((imgy,imgx))
-
     for y,x in zip(y_idx, x_idx):
-
-            #print(y*gridheight,(y+1)*gridheight,x*gridwidth,(x+1)*gridwidth)
             mask_2d[y*gridheight:(y+1)*gridheight,x*gridwidth:(x+1)*gridwidth] = 1
     #cv2.imshow("",mask_2d)
     #cv2.waitKey(0)
     # return np.uint8(mask_2d)
 
-    mask2d_gray = cv2.cvtColor(mask_2d.astype(np.float32)*255, cv2.COLOR_GRAY2BGR)
-    cv2.imwrite(mask_path,mask2d_gray)
+    mask_2dNO = np.load(path4array)[6]
+    y_idxNO = np.nonzero(mask_2dNO)[0]
+    x_idxNO = np.nonzero(mask_2dNO)[1]
+    mask_2dNO = np.zeros((imgy, imgx))
+    for y, x in zip(y_idxNO, x_idxNO):
+        mask_2dNO[y * gridheight:(y + 1) * gridheight, x * gridwidth:(x + 1) * gridwidth] = 1
 
-    return mask_2d
+    # mask2d_gray = cv2.cvtColor(mask_2d.astype(np.float32)*255, cv2.COLOR_GRAY2BGR)
+    cv2.imwrite(mask_path,mask_2d.astype(np.float32)*255)
+    cv2.imwrite(mask_pathNO,mask_2dNO.astype(np.float32) * 255)
 
-def playvideowithmask(videopath, mask,outimgpath):
+    return mask_2d,mask_2dNO
+
+def playvideowithmask(fps,ranges,videopath, mask,maskNO,outimgpath,outimgpathNO):
     cap = cv2.VideoCapture(videopath)
-    while 1:
-        ret, frame = cap.read()  # 如果想保存光流图片，以备后面调用flames2video得到光流video.
-        if ret!=True:
+    lower = fps * ranges[0]
+    upper = fps * ranges[1]
+    _, frame1 = cap.read()
+    i = 1
+
+    # Till you scan the video
+    while (i):
+
+        # Capture another frame and convert to gray scale
+        ret, frame = cap.read()
+        if i < lower:  # 直接从好帧开始运行
+            i += 1
+            continue
+        if i >= upper:
             break
+        if ret != True:
+            break
+    # while 1:
+    #     ret, frame = cap.read()  # 如果想保存光流图片，以备后面调用flames2video得到光流video.
+    #     if ret!=True:
+    #         break
 
         # double_representation = mask+frame#cv2.addWeighted(frame, 1, 255-mask, 1, 0.2,dtype = cv2.CV_32F)
-        frame = cv2.bitwise_and(frame, frame, mask=np.uint8(mask))
+        frameYES = cv2.bitwise_and(frame, frame, mask=np.uint8(mask))
+        frameNO = cv2.bitwise_and(frame, frame, mask=np.uint8(maskNO))
+        i += 1
 
 
-
-        cv2.imshow("window", frame)
+        cv2.imshow("window", frameYES)
 
         kk = cv2.waitKey(20) & 0xff  # 实时可视化光流图片，（人自己写好了flow2img函数）
         # Press 'e' to exit the video
         if kk == ord('e'):
-            cv2.imwrite(outimgpath,frame)
+            cv2.imwrite(outimgpath,frameYES)
+            cv2.imwrite(outimgpathNO,frameNO)
+
             break
 
 
@@ -349,18 +376,24 @@ def fft_window(givenfreq,thr4str,thr4df,fs, T, path4signal,infoMatPath, real_fre
     num4indexY =  array_3d.shape[1]
     num4indexX =  array_3d.shape[2]
     print(array_3d.shape[0], num4indexX, num4indexY)#625 8 8
-    array_3d_best12idx_value_freq = np.ones((6,num4indexY,num4indexX))  # index1,2 value1,2 freq 1,2 for most n seconded strong freq
+    array_3d_best12idx_value_freq = np.ones((7,num4indexY,num4indexX))  # index1,2 value1,2 freq 1,2 for most n seconded strong freq+ layer7: noisy mask without too much checking!
     array_3d_best12freqvalue = np.ones((2, num4indexY, num4indexX))
     start = time.time()
+
+    #speed up computation!
+
+
+
+
+    #how to speed here up!
     for i in range(num4indexY):
         for j in range(num4indexX):
             list_2d = array_3d[:,i,j]
-            y = list_2d[T[0] * fs:T[1] * fs]
-            y = y[::int((fs // real_freq))]  # 60/real_freq
+            y = list_2d[::int((fs // real_freq))]  # 60/real_freq
+
             # # 分辨率
             df = real_freq / (real_totalNbr - 1)  # 0.03HZ
             Y = np.fft.fft(y) * 2 / real_totalNbr  # *2/N 反映了FFT变换的结果与实际信号幅值之间的关系
-
 
             if flag:
                 pos_Y_from_fft = Y[:Y.size // 2]  # 10  2
@@ -368,10 +401,16 @@ def fft_window(givenfreq,thr4str,thr4df,fs, T, path4signal,infoMatPath, real_fre
                 # print(np.abs(pos_Y_from_fft))
                 # print(pos_Y_from_fft.size)
                 order_list = np.argsort(-np.abs(pos_Y_from_fft))
+#  there is a bug here!
+# when the block window is small
+                if pos_Y_from_fft.size < 3:
+                    print("the number of sampled frames is too less! Please increase <time_range> or <realfreq4samples> in the main!")
+                    return False,df
+
                 array_3d_best12idx_value_freq[:,i,j] = [order_list[1],order_list[2],
                                                         np.abs(pos_Y_from_fft)[order_list[1]],
                                                         np.abs(pos_Y_from_fft)[order_list[2]],
-                                                        order_list[1]*df,0]  #  set mask layer to 0 intially   ?
+                                                        order_list[1]*df,0,0]  #  set mask layer to 0 intially   ?
                 #print(array_3d_best12idx_value_freq[:,i,j][5])
                 #test_strategy4window(array_3d_best12idx_value_freq[:,i,j],df,given = 1.02)
                 #print(array_3d_best12idx_value_freq[:,i,j])
@@ -399,7 +438,7 @@ def fft_window(givenfreq,thr4str,thr4df,fs, T, path4signal,infoMatPath, real_fre
     #print(array_3d_best12idx_value_freq[5,:,:])
 
     np.save(infoMatPath,array_3d_best12idx_value_freq)#
-    return df
+    return True,df
 
 
 

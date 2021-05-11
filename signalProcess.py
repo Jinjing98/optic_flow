@@ -194,6 +194,33 @@ def test_strategy(thr4str,thr4df,path4array3d,df,given,flag):
 
     np.save(path4array3d, array_3d)  #
 
+# the input should be 1 channel gray image(0-255)          2d 0/1 array
+def morph(mask_img,k1,k2,k3, i1,i2,i3):
+    # mask = np.load(infoMatPath)[5]
+    # mask_img = mask.astype(np.float32) * 255
+    cv2.imshow("before2", mask_img)
+    cv2.waitKey(0)  # 2 4 4   1 1 2
+    kernel4E = np.ones((k1,k1), np.uint8)  # 去白点噪声，应该一直很small  可以跟随grid的大小调整，同大，或者为其2/3,1/2
+    kernel4D = np.ones((k2,k2), np.uint8)  # thick to original+去黑点（孔洞）  密集的话应该来多轮or增大此kernel  或者这两个参数都略微提高结果最好！
+    kernel4E2 = np.ones((k3,k3), np.uint8)  # before this, make sure u have kicked out all the white/black particles
+    mask_img = cv2.erode(mask_img, kernel4E, iterations=i1)# 这个迭代次数不能动，只能调整kernel大小，否则正确的也erode太厉害
+    cv2.imshow("Ero2", mask_img)
+    cv2.waitKey(0)
+    mask_img = cv2.dilate(mask_img, kernel4D, iterations=i2)  # 密集的话应该这里来多轮迭代or增大此kernel4d  或者这两个参数都略微提高结果最好！
+    cv2.imshow("Dil2", mask_img)
+    cv2.waitKey(0)
+    mask_img = cv2.erode(mask_img, kernel4E2, iterations=i3)
+    cv2.imshow("final2", mask_img)
+    cv2.waitKey(0)
+    return mask_img
+    # mask = (mask_img / 255.0).astype(np.int32)
+
+
+
+
+
+
+
 
 
 
@@ -212,21 +239,19 @@ def test_strategy4windowGlo(thr4str,thr4df,array_3d,df,given):#z = 6#test_strate
     #print(array_3d[4,])#float 64
     #print(array_3d[4,1,1:5])
 
-    # counts = np.bincount(array_3d[4,1])
-    # mostcommon = np.argmax(counts)
-    # print("the most frequent frequncy value : ",mostcommon)
-    mostcommon,times = stats.mode(array_3d[4], axis=None)
-    print(mostcommon,times)
+    #find the index of most common freq in layer 0(strongest freq)
+    a = array_3d[0].reshape(-1)
+    counts = np.bincount(a.astype(np.int32))
+    mostidx = np.argmax(counts)
+    orderofmost = np.argsort(-np.abs(counts))
+    print("the most frequent frequncy index : ",orderofmost[0])
+    #the same result as above, but here it also count the times of the appearing
+    mostfreq,times = stats.mode(array_3d[4], axis=None)
+    print(mostfreq,times)
+    print(array_3d[0],array_3d[1])
     # if mostcommon < given - 2*df or mostcommon > given + 2*df:
     #     print("the periodic is relatively weak to be confidently detected! Find another ")
     #     return False
-
-
-
-
-
-
-
     #print(array_3d[5])
     print(array_3d.shape)# 6 48 72
     print(array_3d[2].shape) #48,72
@@ -237,39 +262,31 @@ def test_strategy4windowGlo(thr4str,thr4df,array_3d,df,given):#z = 6#test_strate
     mask4 = np.array(array_3d[2]>thr4str*array_3d[3],dtype=int)#INT32
     mask = np.array((mask3 == 1) & (mask4 == 1), dtype=int)
     #print(mask == mask4)
-
-    array_3d[6] = mask
-
-
-# processing “mask" again!
-    #形态学操作去噪声 去孔洞
-    mask_img = mask.astype(np.float32) * 255
-    # mask_img = cv2.cvtColor(mask.astype(np.float32) * 255, cv2.COLOR_GRAY2BGR)
-    cv2.imshow("before", mask_img)
-    cv2.waitKey(0)  #2 4 4   1 1 2
-    kernel4E = np.ones((2, 2), np.uint8)#去白点噪声，应该一直很小
-    kernel4D = np.ones((4, 4), np.uint8)#thick to original+去黑点（孔洞）  密集的话应该来多轮or增大此kernel  或者这两个参数都略微提高结果最好！
-    kernel4E2 = np.ones((4, 4), np.uint8)#before this, make sure u have kicked out all the white/black particles
-    mask_img = cv2.erode(mask_img, kernel4E, iterations=1)
-    cv2.imshow("Ero", mask_img)
-    cv2.waitKey(0)
-    mask_img = cv2.dilate(mask_img,kernel4D,iterations=5)#密集的话应该这里来多轮迭代or增大此kernel4d  或者这两个参数都略微提高结果最好！
-    cv2.imshow("Dil", mask_img)
-    cv2.waitKey(0)
-    mask_img = cv2.erode(mask_img, kernel4E2, iterations=2)
-    cv2.imshow("final",mask_img)
-    cv2.waitKey(0)
-    mask = (mask_img/255.0).astype(np.int32)
+    array_3d[5] = mask
+    array_3d[6] = mask  # we don't need layer6 anymore, the latest version decided to do morph not for the array, but for extended gray img
 
 
-
-
-
-
-
+# # processing “mask" again!
+#     #形态学操作去噪声 去孔洞
+#     mask_img = mask.astype(np.float32) * 255
+#     # mask_img = cv2.cvtColor(mask.astype(np.float32) * 255, cv2.COLOR_GRAY2BGR)
+#     cv2.imshow("before", mask_img)
+#     cv2.waitKey(0)  #2 4 4   1 1 2
+#     kernel4E = np.ones((2, 2), np.uint8)#去白点噪声，应该一直很小
+#     kernel4D = np.ones((4, 4), np.uint8)#thick to original+去黑点（孔洞）  密集的话应该来多轮or增大此kernel  或者这两个参数都略微提高结果最好！
+#     kernel4E2 = np.ones((4, 4), np.uint8)#before this, make sure u have kicked out all the white/black particles
+#     mask_img = cv2.erode(mask_img, kernel4E, iterations=1)
+#     cv2.imshow("Ero", mask_img)
+#     cv2.waitKey(0)
+#     mask_img = cv2.dilate(mask_img,kernel4D,iterations=5)#密集的话应该这里来多轮迭代or增大此kernel4d  或者这两个参数都略微提高结果最好！
+#     cv2.imshow("Dil", mask_img)
+#     cv2.waitKey(0)
+#     mask_img = cv2.erode(mask_img, kernel4E2, iterations=2)
+#     cv2.imshow("final",mask_img)
+#     cv2.waitKey(0)
 
     #mask = np.uint8(mask)
-    array_3d[5] = mask#  change it to mask, the result get improved, as you can see the boundary is not wrongly regarded as info region
+    #  change it to mask, the result get improved, as you can see the boundary is not wrongly regarded as info region
     #array([ True, False,  True], dtype=bool)
 
 
@@ -277,7 +294,7 @@ def test_strategy4windowGlo(thr4str,thr4df,array_3d,df,given):#z = 6#test_strate
 
 
 
-def visul_savemask(maskDir,mask_path,mask_pathNO,path4array,imgx,imgy,numx,numy):
+def morph_visul_savemask(maskDir,mask_path,mask_pathNO,path4array,imgx,imgy,numx,numy,k1,k2, k3, i1, i2, i3):
     gridwidth = int(imgx/numx)
     gridheight = int(imgy/numy)
     mask_2d = np.load(path4array)[5]
@@ -294,16 +311,42 @@ def visul_savemask(maskDir,mask_path,mask_pathNO,path4array,imgx,imgy,numx,numy)
     #cv2.waitKey(0)
     # return np.uint8(mask_2d)
 
-    mask_2dNO = np.load(path4array)[6]
-    y_idxNO = np.nonzero(mask_2dNO)[0]
-    x_idxNO = np.nonzero(mask_2dNO)[1]
-    mask_2dNO = np.zeros((imgy, imgx))
-    for y, x in zip(y_idxNO, x_idxNO):
-        mask_2dNO[y * gridheight:(y + 1) * gridheight, x * gridwidth:(x + 1) * gridwidth] = 1
+    # mask = np.load(infoMatPath)[5]
+    # k1, k2, k3, i1, i2, i3 = 5, 12 ,4, 1, 4 ,2#erotion(no white points denoise) dilation(no black points) erosion
+    # k1 = int(gridwidth*2/3)  #
+
+    mask_img = mask_2d.astype(np.float32) * 255
+    morph_mask_img = morph(mask_img, k1,k2,k3,i1,i2,i3)#k1,k1,k3, i1,i2,i3
+    mask_2d = (morph_mask_img / 255.0).astype(np.int32)
+    mask_2dNO = (mask_img / 255.0).astype(np.int32)
+    # mask_2dNO = np.load(path4array)[6]
+    # y_idxNO = np.nonzero(mask_2dNO)[0]
+    # x_idxNO = np.nonzero(mask_2dNO)[1]
+    # mask_2dNO = np.zeros((imgy, imgx))
+    # for y, x in zip(y_idxNO, x_idxNO):
+    #     mask_2dNO[y * gridheight:(y + 1) * gridheight, x * gridwidth:(x + 1) * gridwidth] = 1
 
     # mask2d_gray = cv2.cvtColor(mask_2d.astype(np.float32)*255, cv2.COLOR_GRAY2BGR)
-    cv2.imwrite(mask_path,mask_2d.astype(np.float32)*255)
-    cv2.imwrite(mask_pathNO,mask_2dNO.astype(np.float32) * 255)
+    cv2.imwrite(mask_path, morph_mask_img)
+    cv2.imwrite(mask_pathNO, mask_img)
+
+
+
+
+
+
+
+
+    # mask_2dNO = np.load(path4array)[6]
+    # y_idxNO = np.nonzero(mask_2dNO)[0]
+    # x_idxNO = np.nonzero(mask_2dNO)[1]
+    # mask_2dNO = np.zeros((imgy, imgx))
+    # for y, x in zip(y_idxNO, x_idxNO):
+    #     mask_2dNO[y * gridheight:(y + 1) * gridheight, x * gridwidth:(x + 1) * gridwidth] = 1
+    #
+    # # mask2d_gray = cv2.cvtColor(mask_2d.astype(np.float32)*255, cv2.COLOR_GRAY2BGR)
+    # cv2.imwrite(mask_path,mask_2d.astype(np.float32)*255)
+    # cv2.imwrite(mask_pathNO,mask_2dNO.astype(np.float32) * 255)
 
     return mask_2d,mask_2dNO
 
@@ -410,7 +453,7 @@ def fft_window(givenfreq,thr4str,thr4df,fs, T, path4signal,infoMatPath, real_fre
                 array_3d_best12idx_value_freq[:,i,j] = [order_list[1],order_list[2],
                                                         np.abs(pos_Y_from_fft)[order_list[1]],
                                                         np.abs(pos_Y_from_fft)[order_list[2]],
-                                                        order_list[1]*df,0,0]  #  set mask layer to 0 intially   ?
+                                                        order_list[1]*df,0,0]  #  set mask layer and maskNO layer both to 0 intially
                 #print(array_3d_best12idx_value_freq[:,i,j][5])
                 #test_strategy4window(array_3d_best12idx_value_freq[:,i,j],df,given = 1.02)
                 #print(array_3d_best12idx_value_freq[:,i,j])
@@ -427,7 +470,6 @@ def fft_window(givenfreq,thr4str,thr4df,fs, T, path4signal,infoMatPath, real_fre
                 # pl.semilogy(f, np.abs(pos_Y_from_fft))
                 # pl.xlabel('freq(Hz)')
                 # pl.title("positiveHalf fft")
-                # pl.title("fft in detail")
                 # pl.show()
 
 

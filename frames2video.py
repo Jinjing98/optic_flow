@@ -3,7 +3,7 @@ import os
 import cv2
 import time
 
-size = (512, 384)
+
 def pic2video(path, size):
     # path = 'output'#文件路径
     filelist = len(os.listdir(path))  # 获取该目录下的所有文件名

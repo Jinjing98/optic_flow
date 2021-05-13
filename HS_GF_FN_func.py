@@ -199,6 +199,9 @@ def GF(videopath,flow_path,sigpath,range):
 
 
 def GF_window(videopath,sigpath,ranges,gridnumX,gridnumY):
+
+
+
 	cap = cv2.VideoCapture(videopath)
 	width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
 	height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))

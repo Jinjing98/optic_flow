@@ -231,8 +231,8 @@ def test_strategy4windowGlo(thr4str,thr4df,array_3d,df,given):#z = 6#test_strate
 
 
     if given:
-        mask1 = np.array((array_3d[4] <= given+thr4df*df), dtype=int)
-        mask2 = np.array((array_3d[4] >= given-thr4df*df), dtype=int)
+        mask1 = np.array((array_3d[4] < given+thr4df*df), dtype=int)
+        mask2 = np.array((array_3d[4] > given-thr4df*df), dtype=int)
         mask3 = np.array((mask1 == 1) & (mask2 == 1), dtype=int)
     else:
         mask3 = array_3d[5]
@@ -327,7 +327,7 @@ def morph_visul_savemask(maskDir,mask_path,mask_pathNO,path4array,imgx,imgy,numx
     #     mask_2dNO[y * gridheight:(y + 1) * gridheight, x * gridwidth:(x + 1) * gridwidth] = 1
 
     # mask2d_gray = cv2.cvtColor(mask_2d.astype(np.float32)*255, cv2.COLOR_GRAY2BGR)
-    cv2.imwrite(mask_path, morph_mask_img)
+    #cv2.imwrite(mask_path, morph_mask_img)
     cv2.imwrite(mask_pathNO, mask_img)
 
 
@@ -380,12 +380,13 @@ def playvideowithmask(fps,ranges,videopath, mask,maskNO,outimgpath,outimgpathNO)
         i += 1
 
 
-        cv2.imshow("window", frameYES)
+        # cv2.imshow("window", frameYES)
+        cv2.imshow("window",frameNO)
 
         kk = cv2.waitKey(20) & 0xff  # 实时可视化光流图片，（人自己写好了flow2img函数）
         # Press 'e' to exit the video
         if kk == ord('e'):
-            cv2.imwrite(outimgpath,frameYES)
+            #cv2.imwrite(outimgpath,frameYES)
             cv2.imwrite(outimgpathNO,frameNO)
 
             break
@@ -402,11 +403,11 @@ def playvideowithmask(fps,ranges,videopath, mask,maskNO,outimgpath,outimgpathNO)
 
 
 
-def fft_window(givenfreq,thr4str,thr4df,fs, T, path4signal,infoMatPath, real_freq, flag='half', bandpass=False, Range=None, ):  # 默认为half
+def fft_window(fps,givenfreq,thr4str,thr4df,fs, T, path4signal,infoMatPath, real_freq, flag='half', bandpass=False, Range=None, ):  # 默认为half
 
     totalT = (T[1] - T[0])
 
-    totalNbr = fs * totalT
+
 
     # jinjing test
     real_totalNbr = real_freq * totalT
@@ -432,7 +433,18 @@ def fft_window(givenfreq,thr4str,thr4df,fs, T, path4signal,infoMatPath, real_fre
     for i in range(num4indexY):
         for j in range(num4indexX):
             list_2d = array_3d[:,i,j]
-            y = list_2d[::int((fs // real_freq))]  # 60/real_freq
+            step = round(fs/real_freq)
+            y = list_2d[::step]  # 60/real_freq
+
+            # y = np.full(len(y), 125, dtype=np.uint8)#debug
+
+            # y = list_2d[::int((fs // real_freq))]  # 60/real_freq
+            # y = list_2d[::3]  # 60/real_freq
+
+            real_totalNbr = len(y)
+            real_freq = float(fps)/step
+
+
 
             # # 分辨率
             df = real_freq / (real_totalNbr - 1)  # 0.03HZ
@@ -464,13 +476,15 @@ def fft_window(givenfreq,thr4str,thr4df,fs, T, path4signal,infoMatPath, real_fre
                 # array_3d_best12idx_value_freq[4,i,j] = order_list[1]*df #result
                 # array_3d_best12idx_value_freq[5,i,j] = 0 #mask 0/1
 
-                # M = pos_Y_from_fft.size
-                # f = [df * n for n in range(0, M)]
-                #
-                # pl.semilogy(f, np.abs(pos_Y_from_fft))
-                # pl.xlabel('freq(Hz)')
-                # pl.title("positiveHalf fft")
-                # pl.show()
+                if (j == 425 and (i == 240 or i == 50)):
+                    M = pos_Y_from_fft.size
+                    f = [df * n for n in range(0, M)]
+
+                    pl.semilogy(f, np.abs(pos_Y_from_fft))
+                    pl.xlabel('freq(Hz)')
+                    pl.title("positiveHalf fft"+str(j)+"_"+str(i))
+                    pl.show()
+
 
 
     test_strategy4windowGlo(thr4str,thr4df,array_3d_best12idx_value_freq,df,givenfreq)

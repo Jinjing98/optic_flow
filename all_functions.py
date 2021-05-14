@@ -256,32 +256,33 @@ def playvideowithmask(fps,ranges,videopath, mask,maskNO,outimgpath,outimgpathNO)
 # T here is the range relative to the .npy file.  (not relative to the video, for the case of .npy start with 0, the two are the same)
 # carry out fft.
 # from avoid FN point of view, more general
-def test1(top5_ID,df,given_freq,maskNfreqID_infoMat,thr4nbr):  # try to reduce FN
+def test1(top10_ID,df,given_freq,maskNfreqID_infoMat,thr4nbr):  # try to reduce FN
     #  all true if it is the wider neighbor of given
     # how to define "a good neighbour?" how to set thr4nbr?
+    # thr4nbr = 1
 
-    gridnumy = top5_ID.shape[1]
-    gridnumx = top5_ID.shape[2]
+    gridnumy = top10_ID.shape[1]
+    gridnumx = top10_ID.shape[2]
 
     ID_expect = given_freq/df
-    top5_ID = np.where(top5_ID <  ID_expect + thr4nbr , top5_ID, 0)
-    top5_ID = np.where(top5_ID >  ID_expect - thr4nbr , top5_ID, 0)
+    top10_ID = np.where(top10_ID <  ID_expect + thr4nbr , top10_ID, 0)
+    top10_ID = np.where(top10_ID >  ID_expect - thr4nbr , top10_ID, 0)
 
-    mask2D =  np.any(top5_ID,axis= 0)#.astype(np.float64)
+    mask2D =  np.any(top10_ID,axis= 0)#.astype(np.float64)
     bestIDX = np.zeros([gridnumy,gridnumx])
 
-    closest_layer_number = np.argsort(-np.abs(top5_ID-ID_expect),axis=0)[-1]#just 4 non-mask region is useful!
-
+    closest_layer_number = np.argsort(-np.abs(top10_ID-ID_expect),axis=0)[-1]#just 4 non-mask region is useful!
+# how to attach the mask effeciently?
     for y in range(gridnumy):
         for x in range(gridnumx):
             if mask2D[y,x]:
-                bestIDX[y,x] = top5_ID[closest_layer_number[y,x],y,x]
+                bestIDX[y,x] = top10_ID[closest_layer_number[y,x],y,x]
 
     maskNfreqID_infoMat[0] = mask2D.astype(np.uint32)#mask
     maskNfreqID_infoMat[1] = bestIDX#index
     return maskNfreqID_infoMat
 
-def test2(pos_Y_from_fft,top5_ID,maskNfreqID_infoMat,df,given_freq,thr4strSma,thr4strBig): # require relative strong strength
+def test2(absStr,pos_Y_from_fft,top10_ID,maskNfreqID_infoMat,df,given_freq,thr4str): # require relative strong strength
     mask2D = maskNfreqID_infoMat[0].astype(bool)
     Boundary_thrSma_thrBig = 2*thr4nbr   # THE UPPPER BOUND FOR deltaID_BEST_EXPECT
     ID_expect = given_freq / df
@@ -292,23 +293,39 @@ def test2(pos_Y_from_fft,top5_ID,maskNfreqID_infoMat,df,given_freq,thr4strSma,th
 
                 bestID = maskNfreqID_infoMat[1][y,x]
                 bestStr = np.abs(np.real(pos_Y_from_fft[bestID,y,x]))
-                if(np.abs(np.real(bestStr))<0.5):  # check the aboslute atrength, avoid FP noise, maybe introduce another thr?
+                k = max(1,bestID-1)
+                nLStr = np.abs(np.real(pos_Y_from_fft[k,y,x]))
+                nRstr = np.abs(np.real(pos_Y_from_fft[bestID+1,y,x]))
+                if(np.abs(np.real(bestStr))<absStr):  # check the aboslute atrength, avoid FP noise, maybe introduce another thr?
+                    mask2D[y, x] = False
+                    maskNfreqID_infoMat[1, y, x] = 0
+                    continue
+                # else:  # since I used top20, this else is quite necessary!  since we may have some points here
+                #     topID = top10_ID[0, y, x]
+                #     topStr = np.abs(np.real(pos_Y_from_fft[topID, y, x]))
+                #     deltaID_BEST_EXPECT= np.abs(bestID-ID_expect)  # depend on if the distance of bestID to
+                #                                                     # expect(given_ID), we use different thrStr
+                #                                                     #if bigger distance,then less possibility of Positive True window,
+                #                                                     # so we use a stricter(bigger)  thr4str
+                #     bound = np.min([thr4nbr/4,2])  # 4<5 lower bound of thr4nbr   (5,15)
+                #     thr4str =[thr4strSma if deltaID_BEST_EXPECT<bound else thr4strBig]  # since here we already passed the strengeth test, so the thr4strSma can be quite small [0.05-0.1]
+                #     # thr4str = 0.4
+                #     if (bestStr / topStr < thr4str):  #avoid FP periodic region with other freq(since in test1 we have a quite wider neighbor)
+                #         mask2D[y, x] = False
+                #         maskNfreqID_infoMat[1, y, x] = 0
+
+
+                elif(nLStr>bestStr or nRstr>bestStr):
                     mask2D[y, x] = False
                     maskNfreqID_infoMat[1, y, x] = 0
                     continue
                 else:
-                    topID = top5_ID[0, y, x]
+                    topID = top10_ID[0, y, x]
                     topStr = np.abs(np.real(pos_Y_from_fft[topID, y, x]))
-                    deltaID_BEST_EXPECT= np.abs(bestID-ID_expect)  # depend on if the distance of bestID to
-                                                                    # expect(given_ID), we use different thrStr
-                                                                    #if bigger distance,then less possibility of Positive True window,
-                                                                    # so we use a stricter(bigger)  thr4str
-                    bound = np.min([thr4nbr/4,2])  # 4<5 lower bound of thr4nbr   (5,15)
-                    thr4str =[thr4strSma if deltaID_BEST_EXPECT<bound else thr4strBig]  # since here we already passed the strengeth test, so the thr4strSma can be quite small [0.05-0.1]
-                    # thr4str = 0.1
-                    if (bestStr / topStr < thr4str):  #avoid FP periodic region with other freq(since in test1 we have a quite wider neighbor)
+                    if((topID-bestID)>2*thr4nbr/3 and topStr>bestStr*thr4str):#this case we suppose is points periodic motion with another freq(not close enough to given to be recognized as given)
                         mask2D[y, x] = False
                         maskNfreqID_infoMat[1, y, x] = 0
+
 
 
 
@@ -321,13 +338,13 @@ def test2(pos_Y_from_fft,top5_ID,maskNfreqID_infoMat,df,given_freq,thr4strSma,th
 
 
 #将两个定义为同一个T!!!! 一旦换头，应from scratch  .npy!
-def fft_window(visuliseFFT,fps,givenfreq, thr4nbr,thr4strSma,thr4strBig,T,path4signal,infoMatPath, sample_freq,vispos_YX = [10,20]):  # 默认为half
+def fft_window(absStr,visuliseFFT,top,fps,givenfreq, thr4nbr,thr4str,T,path4signal,infoMatPath, sample_freq,vispos_YX = [10,20]):  # 默认为half
     idx_start = T[0]*fps
     idx_end = T[1]*fps
     array_3d = np.load(path4signal)
     num4indexY =  array_3d.shape[1]
     num4indexX =  array_3d.shape[2]
-    top5_ID = np.ones((5,num4indexY,num4indexX))  #  how to choose this 5?
+    top10_ID = np.ones((top,num4indexY,num4indexX))  #  how to choose this 5?
     maskNfreqID_infoMat = np.zeros((2,num4indexY,num4indexX),np.uint32)
 
 
@@ -337,7 +354,7 @@ def fft_window(visuliseFFT,fps,givenfreq, thr4nbr,thr4strSma,thr4strBig,T,path4s
     #speed up computation!
 
     step = round(fps / sample_freq)
-    array_3d = array_3d[idx_start:idx_end][::step]
+    array_3d = array_3d[::step]
     real_totalNbr = array_3d.shape[0]
     real_sample_freq = float(fps) / step
     df = real_sample_freq / (real_totalNbr - 1)  # 0.03HZ
@@ -365,20 +382,29 @@ def fft_window(visuliseFFT,fps,givenfreq, thr4nbr,thr4strSma,thr4strBig,T,path4s
         Y = vispos_YX[0]
         X = vispos_YX[1]
         M = pos_Y_from_fft[:,Y,X].size
+        testkk = np.abs(np.real(pos_Y_from_fft[:,Y,X]))
+        testll = (np.all(testkk)==0)
         test = np.argsort(-np.abs(np.real(pos_Y_from_fft[:,Y,X])))
         f = [df * n for n in range(0, M)]
 
-        pl.semilogy(f, np.abs(pos_Y_from_fft[:,Y,X]))
+        # pl.semilogy(f, np.abs(np.real(pos_Y_from_fft[:,Y,X])))#?
+        pl.plot(f, np.abs(np.real(pos_Y_from_fft[:,Y,X])))
         pl.xlabel('freq(Hz)')
         pl.title("positiveHalf fft YX" + str(Y) + "_" + str(X))
         pl.show()
-
-
+    # order_list = np.zeros(pos_Y_from_fft.shape,dtype=np.uint32)  # this section can not order 0 well, but the first statge of  test2 can hadnle it
+    # a = np.abs(np.real(pos_Y_from_fft))
+    # order_list = [8 if a.any(axis = 0) else 0]
     order_list = np.argsort(-np.abs(np.real(pos_Y_from_fft)),axis=0)
-    top5_ID = order_list[1:6]
-    test1(top5_ID, df, givenfreq, maskNfreqID_infoMat, thr4nbr)
+    # testkk = np.abs(np.real(pos_Y_from_fft[:, Y, X]))
+
+
+
+
+    top10_ID = order_list[1:(top+1)]
+    test1(top10_ID, df, givenfreq, maskNfreqID_infoMat, thr4nbr)
     a = maskNfreqID_infoMat.copy()
-    test2(pos_Y_from_fft,top5_ID,maskNfreqID_infoMat,df,givenfreq,thr4strSma,thr4strBig)
+    test2(absStr,pos_Y_from_fft,top10_ID,maskNfreqID_infoMat,df,givenfreq,thr4str)
     improve = a[0].astype(np.uint8)-maskNfreqID_infoMat[0].astype(np.uint8)
 
     #check freqMap and saving mask as IMG
@@ -490,44 +516,56 @@ def GF_window(videopath,sigpath,ranges,gridnumX,gridnumY):  # choose ranges give
     # np.save(sigpath+"GFSIGS_ang.txt",SIGS_ang)
     # np.save(sigpath+"GFSIGS_mag.txt",SIGS_mag)
     np.save(sigpath, SIGS_gray)
+    # np.save("D:\\Study\\Datasets\\AEXTENSION\\Cho80_extension\\static_cam\\pulseNstatic\\1\\gray\\size854_480\\SIGS_gray854_480.npy",SIGS_gray)
 
 
 
+fmt = ".mp4"#".avi"
 
-
-vispos_YX = [190,83]  #the pos of the grid not the pixel!
-imgx = 360#854#360
-imgy = 288#480#288
-gridnumx =360#854#360#180#90#360#90#180#360#720#180#72#36#36#18#360#180#18#36#72
-gridnumy = 288#480#288#144#36#144#18#36#72#144#288#144#48#24#24#12#288#144#12#24#48
+imgx = 854#720#360#854#360
+imgy = 480#288#480#288
+gridnumx =854#720#360#854#360#180#90#360#90#180#360#720#180#72#36#36#18#360#180#18#36#72
+gridnumy = 480#288#480#288#144#36#144#18#36#72#144#288#144#48#24#24#12#288#144#12#24#48
 
 # thr4nbr = 6# if t is small, this shoudl be small too
 # thr4str = 0.3#1.2  bigger stricter   1.0  make no sense
 
 fps = 25
-# 非整除会出错！
+# 可以非整出，非整除不会出错！?
 realfreq4samples = 25
-time_range =[0,10]#35 [21,31]#[0,20]
-givenfreq =1.5#2.3# 0.8#0.35#1.5
+
+vispos_YX =  [247,421]#[130,80]  #the pos of the grid not the pixel!
+time_range =[0,7]#[1,8]#35 [21,31]#[0,20]
+givenfreq =  1.5#1.25#0.8#1.25#0.8#1#0.8#1.5#2.3# 0.8#0.35#1.5   # edit it to 1.1  the result is not good as expected!
+videoname = "3"#"cardNresp1"#"card1"#"WinB25"#"resp3"#"card1"# \"+videoname+"#BINW25  WINB127 WINB25
 
 t = time_range[1]-time_range[0]
-sigmoid4t =  1/(1 + np.exp(-t))  #definately bigger than (0.5,1)
-sigmoid4given = 1/(1 + np.exp(-10*givenfreq)) # (0.5,1)#positively related to givenfreq, at the same time restrict it in [0,1]
-thr4nbr =  5*sigmoid4t*sigmoid4given/(0.5*0.5) #0.5 is the sigmoid4t when t == 0 #ΔHZ = thr4nb*df.  It is reasonable to let ΔHZ be positively related to givenfreq
-thr4nbr = max(min(15, thr4nbr), 5)  # restric thr4nbr to [3,10]  #quite genral of test1, we try to reduce FN but also introduce some FP
-thr4strSma = 0.05
-thr4strBig = 0.6#suggest < 1  #  since our thr4nbr is quite general(big), here we have to be strict for this thr4strBig to further filtered out periodic sig but with another freq(wider neighbr of given but not given)
+sigmoid4t =  1/(1 + np.exp(-(t/15)))  #definately bigger than (0.5,1)  # suppose out video 5s-20s
+sigmoid4given = 1/(1 + np.exp(-givenfreq)) # (0.5,1)#positively related to givenfreq, at the same time restrict it in [0,1]
+thr4nbr = np.around( 2*sigmoid4t*sigmoid4given/(0.5*0.5),2) #0.5 is the sigmoid4t when t == 0 #ΔHZ = thr4nb*df.  It is reasonable to let ΔHZ be positively related to givenfreq
+# thr4nbr = max(min(15, thr4nbr), 5)  # restric thr4nbr to [3,10]  #quite genral of test1, we try to reduce FN but also introduce some FP
+thr4nbr = min(6,thr4nbr)
+top = 20  #keep right there, only take up the highest 20 ID into account
 
-videoname = "card1"#"WinB25"#"resp3"#"card1"# \"+videoname+"#BINW25  WINB127 WINB25
+
+# this value should be bigger for irre case. such as 15
+absStr = 15#10.5  #final!set this to 5 is nice! how to set the parms?  to deal with the case where, this vlaue was 0.5, it should be bigger for noisy irre image?
+# thr4strSma = 0.05
+# thr4strBig = 0.6#suggest < 1  #  since our thr4nbr is quite general(big), here we have to be strict for this thr4strBig to further filtered out periodic sig but with another freq(wider neighbr of given but not given)
+thr4str = 2
+
+
 String0 = str(gridnumx)+"_"+str(gridnumy)
-String = str(gridnumx)+"_"+str(gridnumy)+"_"+str(thr4strSma)+"_"+str(thr4strBig)+"_"+str(thr4nbr)+"_"+str(givenfreq)
+String = str(gridnumx)+"_"+str(gridnumy)+"_"+str(thr4nbr)+"_"+str(top)+"_"+str(thr4str)+"_"+str(givenfreq)
 
 mode = "gray"
-extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\\arti_videos\\"
 extensionDir = "D:\Study\Datasets\extension\\"
-videopath = extensionDir+videoname+".avi"
+extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\irreg_motion\\"
+extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulseNstatic\\"
+videopath = extensionDir+videoname+fmt
 meansigarrayDIR = extensionDir+videoname+"\\"+mode+"\size"+String0+"\\"
-meansigarrayPath = meansigarrayDIR+"SIGS_"+mode+String0+".npy"
+meansigarrayPath = meansigarrayDIR+"SIGS_"+mode+"_"+String0+"_"+str(time_range[0])+"_"+str(time_range[1])+".npy"
+#D:\\Study\\Datasets\\AEXTENSION\\Cho80_extension\\static_cam\\pulseNstatic\\video17 00_00_27-00_00_36\\gray\\size854_480\\SIGS_gray854_480.npy'
 
 infoMatDIR = extensionDir+videoname+"\\"+mode+"\size"+String0+"\\"
 infoMatPath = infoMatDIR+ "infoMat2_mask_ID"+String+"_"+str(realfreq4samples)+".npy"
@@ -539,6 +577,6 @@ maskDir = extensionDir+videoname+"\\"+mode+"\size"+String+"\\"
 
 
 # GF_window(videopath, meansigarrayPath, time_range, gridnumx,gridnumy)
-flag,df = fft_window(1,fps, givenfreq, thr4nbr,thr4strSma,thr4strBig,time_range,meansigarrayPath,infoMatPath, realfreq4samples,vispos_YX)#, [0.1, 0.3])
+flag,df = fft_window(absStr,1,top,fps, givenfreq, thr4nbr,thr4str,time_range,meansigarrayPath,infoMatPath, realfreq4samples,vispos_YX)#, [0.1, 0.3])
 #visuliseFFT,fps,givenfreq,thr4str,thr4nbr,T, path4signal,infoMatPath, sample_freq,Range
 # visual_save_mask(maskDir,mask_path,infoMatPath,imgx,imgy,gridnumx,gridnumy)

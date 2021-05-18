@@ -1,4 +1,4 @@
-from HS_GF_FN_func import HS,GF
+from HS_GF_FN_GRAY_func import HS,GF
 from signalProcess import fft
 
 

@@ -1,4 +1,4 @@
-from HS_GF_FN_func import HS,GF,GF_window
+from HS_GF_FN_GRAY_func import HS,GF,GF_window
 from signalProcess import fft_window,morph_visul_savemask,playvideowithmask
 import cv2
 import numpy as np

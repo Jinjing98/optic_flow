@@ -8,6 +8,8 @@ from scipy.signal import butter, lfilter
 import time
 import pylab as plt
 from scipy import stats
+from HS_GF_FN_GRAY_func import HS,GF,GRAY,FN
+from test import draw2pointsRAW_FFT,on_EVENT_LBUTTONDOWN
 
 
 
@@ -290,19 +292,21 @@ def test2(absStr,pos_Y_from_fft,top10_ID,maskNfreqID_infoMat,df,given_freq,thr4s
     for y in range(gridnumy):
         for x in range(gridnumx):
             if mask2D[y, x]:
+                if y == 192 and x == 200:
+                    print("")
 
                 bestID = maskNfreqID_infoMat[1][y,x]
-                bestStr = np.abs(np.real(pos_Y_from_fft[bestID,y,x]))
+                bestStr = np.abs(np.absolute(pos_Y_from_fft[bestID,y,x]))
                 k = max(1,bestID-1)
-                nLStr = np.abs(np.real(pos_Y_from_fft[k,y,x]))
-                nRstr = np.abs(np.real(pos_Y_from_fft[bestID+1,y,x]))
-                if(np.abs(np.real(bestStr))<absStr):  # check the aboslute atrength, avoid FP noise, maybe introduce another thr?
+                nLStr = np.abs(np.absolute(pos_Y_from_fft[k,y,x]))
+                nRstr = np.abs(np.absolute(pos_Y_from_fft[bestID+1,y,x]))
+                if(np.abs(np.absolute(bestStr))<absStr):  # check the aboslute atrength, avoid FP noise, maybe introduce another thr?
                     mask2D[y, x] = False
                     maskNfreqID_infoMat[1, y, x] = 0
                     continue
                 # else:  # since I used top20, this else is quite necessary!  since we may have some points here
                 #     topID = top10_ID[0, y, x]
-                #     topStr = np.abs(np.real(pos_Y_from_fft[topID, y, x]))
+                #     topStr = np.abs(np.absolute(pos_Y_from_fft[topID, y, x]))
                 #     deltaID_BEST_EXPECT= np.abs(bestID-ID_expect)  # depend on if the distance of bestID to
                 #                                                     # expect(given_ID), we use different thrStr
                 #                                                     #if bigger distance,then less possibility of Positive True window,
@@ -315,17 +319,17 @@ def test2(absStr,pos_Y_from_fft,top10_ID,maskNfreqID_infoMat,df,given_freq,thr4s
                 #         maskNfreqID_infoMat[1, y, x] = 0
 
 
-                elif(nLStr>bestStr or nRstr>bestStr):
-                    mask2D[y, x] = False
-                    maskNfreqID_infoMat[1, y, x] = 0
-                    continue
-                else:
-                    topID = top10_ID[0, y, x]
-                    topStr = np.abs(np.real(pos_Y_from_fft[topID, y, x]))
-                    if((topID-bestID)>2*thr4nbr/3 and topStr>bestStr*thr4str):#this case we suppose is points periodic motion with another freq(not close enough to given to be recognized as given)
-                        mask2D[y, x] = False
-                        maskNfreqID_infoMat[1, y, x] = 0
-
+                # elif(nLStr>bestStr or nRstr>bestStr):
+                #     mask2D[y, x] = False
+                #     maskNfreqID_infoMat[1, y, x] = 0
+                #     continue
+                # else:#  this part is bad, failed in GF3, OR THIS IS THE ISSUE OF VIDEO3, THE MOST STRONG SIG IS HIGH 2.6
+                #     topID = top10_ID[0, y, x]
+                #     topStr = np.abs(np.absolute(pos_Y_from_fft[topID, y, x]))
+                #     if((topID-bestID)>2*thr4nbr/3 and topStr>bestStr*thr4str):#this case we suppose is points periodic motion with another freq(not close enough to given to be recognized as given)
+                #         mask2D[y, x] = False
+                #         maskNfreqID_infoMat[1, y, x] = 0
+                #
 
 
 
@@ -338,7 +342,12 @@ def test2(absStr,pos_Y_from_fft,top10_ID,maskNfreqID_infoMat,df,given_freq,thr4s
 
 
 #将两个定义为同一个T!!!! 一旦换头，应from scratch  .npy!
-def fft_window(absStr,visuliseFFT,top,fps,givenfreq, thr4nbr,thr4str,T,path4signal,infoMatPath, sample_freq,vispos_YX = [10,20]):  # 默认为half
+#meansigarrayPath,String0,infoMatPath, realfreq4samples,vispos_YX
+def fft_window(absStr,visuliseFFT,visuliseRAW,top,fps,givenfreq, thr4nbr,thr4str,T,path4signal,String0,infoMatPath, sample_freq,vispos_YX = [10,20]):  # 默认为half
+    # path4signal = DIR4signal+mode+"\size"+String0+"\\"+"SIGS_"+mode+"_"+String0+"_"+str(time_range[0])+"_"+str(time_range[1])+".npy"
+
+
+
     idx_start = T[0]*fps
     idx_end = T[1]*fps
     array_3d = np.load(path4signal)
@@ -377,26 +386,29 @@ def fft_window(absStr,visuliseFFT,top,fps,givenfreq, thr4nbr,thr4str,T,path4sign
                 return False, df
 
 
+    #
+    # if visuliseFFT:
+    #     Y = vispos_YX[0]
+    #     X = vispos_YX[1]
+    #     M = pos_Y_from_fft[:,Y,X].size
+    #     ydebug = np.absolute(pos_Y_from_fft[:,Y,X])
+    #     testkk = np.abs(np.absolute(pos_Y_from_fft[:,Y,X]))
+    #     testll = (np.all(testkk)==0)
+    #     test = np.argsort(-np.abs(np.absolute(pos_Y_from_fft[:,Y,X])))
+    #     f = [df * n for n in range(0, M)]
+    #
+    #     # pl.semilogy(f, np.abs(np.absolute(pos_Y_from_fft[:,Y,X])))#?
+    #     pl.plot(f, np.abs(np.absolute(pos_Y_from_fft[:,Y,X])))
+    #     pl.xlabel('freq(Hz)')
+    #     pl.title("positiveHalf fft YX" + str(Y) + "_" + str(X))
+    #     pl.savefig(path4signal[:-4] +"_"+ str(Y)+"_"+str(X)+".png")
+    #     pl.show()
 
-    if visuliseFFT:
-        Y = vispos_YX[0]
-        X = vispos_YX[1]
-        M = pos_Y_from_fft[:,Y,X].size
-        testkk = np.abs(np.real(pos_Y_from_fft[:,Y,X]))
-        testll = (np.all(testkk)==0)
-        test = np.argsort(-np.abs(np.real(pos_Y_from_fft[:,Y,X])))
-        f = [df * n for n in range(0, M)]
-
-        # pl.semilogy(f, np.abs(np.real(pos_Y_from_fft[:,Y,X])))#?
-        pl.plot(f, np.abs(np.real(pos_Y_from_fft[:,Y,X])))
-        pl.xlabel('freq(Hz)')
-        pl.title("positiveHalf fft YX" + str(Y) + "_" + str(X))
-        pl.show()
     # order_list = np.zeros(pos_Y_from_fft.shape,dtype=np.uint32)  # this section can not order 0 well, but the first statge of  test2 can hadnle it
-    # a = np.abs(np.real(pos_Y_from_fft))
+    # a = np.abs(np.absolute(pos_Y_from_fft))
     # order_list = [8 if a.any(axis = 0) else 0]
-    order_list = np.argsort(-np.abs(np.real(pos_Y_from_fft)),axis=0)
-    # testkk = np.abs(np.real(pos_Y_from_fft[:, Y, X]))
+    order_list = np.argsort(-np.abs(np.absolute(pos_Y_from_fft)),axis=0)
+    # testkk = np.abs(np.absolute(pos_Y_from_fft[:, Y, X]))
 
 
 
@@ -422,9 +434,38 @@ def fft_window(absStr,visuliseFFT,top,fps,givenfreq, thr4nbr,thr4str,T,path4sign
         mask_2d[y * gridheight:(y + 1) * gridheight, x * gridwidth:(x + 1) * gridwidth] = 1
     mask_2d = mask_2d.astype(np.float32) * 255
 
-    cv2.imshow("", mask_2d)
+    # cv2.imshow("", mask_2d)
+    # cv2.waitKey(0)
+    # cv2.imwrite(mask_path, mask_2d)
+    mask_2dCP = mask_2d.copy()
+    cv2.namedWindow("image")
+    img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP = (mask_2dCP,gridwidth, gridheight,pos_Y_from_fft,visuliseFFT,visuliseRAW,df,path4signal,array_3d,maskNfreqID_infoMat[1])
+   # this func can interatively show curve
+    cv2.setMouseCallback("image", on_EVENT_LBUTTONDOWN, img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP)
+    cv2.imshow("image", mask_2dCP)
+
+
+
+    # if visuliseFFT:
+    #     Y = vispos_YX[0]
+    #     X = vispos_YX[1]
+    #     M = pos_Y_from_fft[:,Y,X].size
+    #
+    #     f = [df * n for n in range(0, M)]
+    #
+    #     # pl.semilogy(f, np.abs(np.absolute(pos_Y_from_fft[:,Y,X])))#?
+    #     pl.plot(f, np.abs(np.absolute(pos_Y_from_fft[:,Y,X])))
+    #     pl.xlabel('freq(Hz)')
+    #     pl.title("positiveHalf fft YX" + str(Y) + "_" + str(X))
+    #     pl.savefig(path4signal[:-4] +"_"+ str(Y)+"_"+str(X)+".png")
+    #     pl.show()
+
+
+
     cv2.waitKey(0)
     cv2.imwrite(mask_path, mask_2d)
+
+
 
 
 
@@ -443,8 +484,16 @@ def fft_window(absStr,visuliseFFT,top,fps,givenfreq, thr4nbr,thr4str,T,path4sign
     end = time.time()
     print('fft time for all windows: ' + str(end - start))
     np.save(infoMatPath,maskNfreqID_infoMat)#infomat now is maskNfreqID_infoMat
-    return True,df
-def GF_window(videopath,sigpath,ranges,gridnumX,gridnumY):  # choose ranges given a video length to collect npy
+    return True,df,real_totalNbr
+def GF_window(videopath,sigDIR,mode,String0,ranges,gridnumX,gridnumY ):  # choose ranges given a video length to collect npy
+    #meansigarrayPath = meansigarrayDIR+mode+"\size"+String0+"\\"+"SIGS_"+mode+"_"+String0+"_"+str(time_range[0])+"_"+str(time_range[1])+".npy"
+    sigpath = sigDIR+mode+"\size"+String0+"\\"+"SIGS_"+mode+"_"+String0+"_"+str(time_range[0])+"_"+str(time_range[1])+".npy"
+
+
+
+#HS(videopath,flow_path,sigpath,range)
+
+
     cap = cv2.VideoCapture(videopath)
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
@@ -520,26 +569,34 @@ def GF_window(videopath,sigpath,ranges,gridnumX,gridnumY):  # choose ranges give
 
 
 
-fmt = ".mp4"#".avi"
+fmt = ".avi"#".mp4"#".avi"  #.map4 is ori video suitable for everything except FN,.avi is resize suitable for everything
 
-imgx = 854#720#360#854#360
-imgy = 480#288#480#288
-gridnumx =854#720#360#854#360#180#90#360#90#180#360#720#180#72#36#36#18#360#180#18#36#72
-gridnumy = 480#288#480#288#144#36#144#18#36#72#144#288#144#48#24#24#12#288#144#12#24#48
+imgx =   512#854#720#360#854#360
+imgy =   384#480#288#480#288
+gridnumx = 512#32#512#32# 256#512#32#64#  128#32#64#128#256#512#32#64#128#256#512#45#90#180#360#180#360#512#854#720#360#854#360#180#90#360#90#180#360#720#180#72#36#36#18#360#180#18#36#72
+gridnumy =  384#24# 384#24#192#384#24#48 #   96#24#48#96#192#384#24#48#96#192#384#36#72#144#288#144#288#384#480#288#480#288#144#36#144#18#36#72#144#288#144#48#24#24#12#288#144#12#24#48
+# gridwidth =  int(imgx/gridnumx)
+# gridheight =int(imgy/gridnumy)
 
 # thr4nbr = 6# if t is small, this shoudl be small too
 # thr4str = 0.3#1.2  bigger stricter   1.0  make no sense
 
 fps = 25
 # 可以非整出，非整除不会出错！?
-realfreq4samples = 25
+realfreq4samples = 25  # it is not the final real freq
 
-vispos_YX =  [247,421]#[130,80]  #the pos of the grid not the pixel!
-time_range =[0,7]#[1,8]#35 [21,31]#[0,20]
-givenfreq =  1.5#1.25#0.8#1.25#0.8#1#0.8#1.5#2.3# 0.8#0.35#1.5   # edit it to 1.1  the result is not good as expected!
-videoname = "3"#"cardNresp1"#"card1"#"WinB25"#"resp3"#"card1"# \"+videoname+"#BINW25  WINB127 WINB25
+
+# vispos_YX = #[192,200]#[130,80]  #the pos of the grid not the pixel!
+
+# this is gird coordinate not pixel coord!! the two are the same when pxiel wise grid!
+vispos_YX =   [200,180] #   pulse
+vispos_YX2 = [10,70]# non pulse[1,4]#
+time_range =[1,6]#[1,8]#35 [21,31]#[0,20]
+givenfreq =  1.3#1.3#1.3#0.8#1.25#1.3#1.5#1.25#0.8#1.25#0.8#1#0.8#1.5#2.3# 0.8#0.35#1.5   # edit it to 1.1  the result is not good as expected!
+videoname = "3"#"3"#"cardNresp1"#"card1"#"WinB25"#"resp3"#"card1"# \"+videoname+"#BINW25  WINB127 WINB25
 
 t = time_range[1]-time_range[0]
+df = 1/t
 sigmoid4t =  1/(1 + np.exp(-(t/15)))  #definately bigger than (0.5,1)  # suppose out video 5s-20s
 sigmoid4given = 1/(1 + np.exp(-givenfreq)) # (0.5,1)#positively related to givenfreq, at the same time restrict it in [0,1]
 thr4nbr = np.around( 2*sigmoid4t*sigmoid4given/(0.5*0.5),2) #0.5 is the sigmoid4t when t == 0 #ΔHZ = thr4nb*df.  It is reasonable to let ΔHZ be positively related to givenfreq
@@ -549,34 +606,72 @@ top = 20  #keep right there, only take up the highest 20 ID into account
 
 
 # this value should be bigger for irre case. such as 15
-absStr = 15#10.5  #final!set this to 5 is nice! how to set the parms?  to deal with the case where, this vlaue was 0.5, it should be bigger for noisy irre image?
+#ang 20  mag 5.5 gray
+absStr =  30#30#10#2#5#5#5#10#20#5.5#20#10.5#.5#15#15#10.5  #final!set this to 5 is nice for staticpulse video! how to set the parms?  to deal with the case where, this vlaue was 0.5, it should be bigger for noisy irre image?
 # thr4strSma = 0.05
 # thr4strBig = 0.6#suggest < 1  #  since our thr4nbr is quite general(big), here we have to be strict for this thr4strBig to further filtered out periodic sig but with another freq(wider neighbr of given but not given)
-thr4str = 2
+thr4str = 6#6#6#6#4#3#2
 
 
 String0 = str(gridnumx)+"_"+str(gridnumy)
-String = str(gridnumx)+"_"+str(gridnumy)+"_"+str(thr4nbr)+"_"+str(top)+"_"+str(thr4str)+"_"+str(givenfreq)
+String = str(gridnumx)+"_"+str(gridnumy)+"_"+str(thr4nbr)+"_"+str(top)+"_"+str(thr4str)+"_"+str(absStr)+"_"+str(givenfreq)
 
-mode = "gray"
+mode =  "FN"  #gray   HS  FN GF
+note = "ang"#"mag"#"mag"#"mag"# "ang" "mag"   # THIS IS JUST FOR fft signal source, both ang and mag sigs have been generated simutanously in the last step
+
 extensionDir = "D:\Study\Datasets\extension\\"
 extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\irreg_motion\\"
 extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulseNstatic\\"
+# extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\\arti_videos\\"
 videopath = extensionDir+videoname+fmt
-meansigarrayDIR = extensionDir+videoname+"\\"+mode+"\size"+String0+"\\"
-meansigarrayPath = meansigarrayDIR+"SIGS_"+mode+"_"+String0+"_"+str(time_range[0])+"_"+str(time_range[1])+".npy"
+meansigarrayDIR = extensionDir+videoname+"\\"
+meansigarrayPath = meansigarrayDIR+mode+"\\"+note+"\size"+String0+"\\"+"SIGS_"+mode+"_"+String0+"_"+str(time_range[0])+"_"+str(time_range[1])+note+".npy"
 #D:\\Study\\Datasets\\AEXTENSION\\Cho80_extension\\static_cam\\pulseNstatic\\video17 00_00_27-00_00_36\\gray\\size854_480\\SIGS_gray854_480.npy'
 
-infoMatDIR = extensionDir+videoname+"\\"+mode+"\size"+String0+"\\"
-infoMatPath = infoMatDIR+ "infoMat2_mask_ID"+String+"_"+str(realfreq4samples)+".npy"
-mask_path = extensionDir+videoname+"\\"+mode+"\size"+String0+"\Mask"+String+".png"  #  the best mask!
-mask_img_path = extensionDir+videoname+"\\"+mode+"\size"+String0+"\mask_img"+String+".png"
-mask_pathNO = extensionDir+videoname+"\\"+mode+"\size"+String0+"\Mask"+String+"NO.png"
-mask_img_pathNO = extensionDir+videoname+"\\"+mode+"\size"+String0+"\mask_img"+String+"NO.png"
-maskDir = extensionDir+videoname+"\\"+mode+"\size"+String+"\\"
+infoMatDIR = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\\"
+infoMatPath = infoMatDIR+ "infoMat2_mask_ID"+String+"_"+str(realfreq4samples)+note+".npy"
+
+mask_path = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\Mask"+String+".png"  #  the best mask!
+mask_img_path = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\mask_img"+String+".png"
+mask_pathNO = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\Mask"+String+"NO.png"
+mask_img_pathNO = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\mask_img"+String+"NO.png"
+maskDir = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String+"\\"
+
+#(videopath,sigDIR,String0,ranges,gridnumX,gridnumY)
+# GF_window(videopath, meansigarrayDIR,mode,String0, time_range, gridnumx,gridnumy )
+
+def pixelwisesig_generate(mode):
+
+    if mode == "gray":
+        GRAY(videopath, meansigarrayDIR,String0, time_range, gridnumx,gridnumy )
+    if mode == "GF":
+        GF(videopath, meansigarrayDIR,String0, time_range, gridnumx,gridnumy )
+    if mode == "HS":
+        HS(videopath, meansigarrayDIR,String0, time_range, gridnumx,gridnumy )
+    if mode == "FN":
+        FN(videopath, meansigarrayDIR,String0, time_range, gridnumx,gridnumy )
 
 
-# GF_window(videopath, meansigarrayPath, time_range, gridnumx,gridnumy)
-flag,df = fft_window(absStr,1,top,fps, givenfreq, thr4nbr,thr4str,time_range,meansigarrayPath,infoMatPath, realfreq4samples,vispos_YX)#, [0.1, 0.3])
-#visuliseFFT,fps,givenfreq,thr4str,thr4nbr,T, path4signal,infoMatPath, sample_freq,Range
-# visual_save_mask(maskDir,mask_path,infoMatPath,imgx,imgy,gridnumx,gridnumy)
+
+def gridsig_generate():
+    path2sig = meansigarrayDIR + mode + "\\" + note + "\size" + str(imgx) + "_" + str(
+        imgy) + "\\" + "SIGS_" + mode + "_" + str(imgx) + "_" + str(imgy) + "_" + str(
+        time_range[0]) + "_" + str(time_range[1]) + note + ".npy"
+    newpath2sig = meansigarrayDIR + mode + "\\" + note + "\size" + str(gridnumx) + "_" + str(
+        gridnumy) + "\\" + "SIGS_" + mode + "_" + str(gridnumx) + "_" + str(gridnumy) + "_" + str(
+        time_range[0]) + "_" + str(time_range[1]) + note + ".npy"
+    sig = np.load(path2sig)
+    sig = sig.reshape(-1, gridnumy, int(imgy / gridnumy), gridnumx, int(imgx / gridnumx))
+    newsig = sig.mean(axis=(2, 4))
+    np.save(newpath2sig, newsig)
+
+#
+pixelwisesig_generate(mode)  # CARRY OUT THIS FOR ONE TIME THEN COMMENT OUT
+# #generate grid sig
+#
+gridsig_generate()# this is used when increase the grid size,the pixel wise sig to generate obj sig without import video ,OF computing etc.
+#
+flag,df,realtotalNUM = fft_window(absStr,1,1,top,fps, givenfreq, thr4nbr,thr4str,time_range,meansigarrayPath,String0,infoMatPath, realfreq4samples,vispos_YX)#, [0.1, 0.3])
+
+
+# draw2pointsRAW_FFT(vispos_YX,vispos_YX2,realfreq4samples,t,mode,note,gridnumx,gridnumy,time_range,meansigarrayDIR,df,videoname)

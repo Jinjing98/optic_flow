@@ -57,33 +57,6 @@ while (i):
 
     pim1 = cv2.resize(prvs, crop_size, interpolation=cv2.INTER_AREA)
     pim2 = cv2.resize(next, crop_size, interpolation=cv2.INTER_AREA)
-    # pim1 = cv2.resize(prvs, crop_size, interpolation=None)
-    # pim2 = cv2.resize(next, crop_size, interpolation=None)
-
-    # end = time.time()
-    # print(end - start)
-    # print('///////')
-
-
-
-
-    # start = time.time()
-    #
-    # # obtain the necessary args for construct the flownet framework
-    # parser = argparse.ArgumentParser()
-    # parser.add_argument('--fp16', action='store_true', help='Run model in pseudo-fp16 mode (fp16 storage fp32 math).')
-    # parser.add_argument("--rgb_max", type=float, default=255.)
-    #
-    # args = parser.parse_args()
-    #
-    # # initial a Net
-    # net = FlowNet2(args).cuda()
-    # # load the state_dict
-    # dict = torch.load("checkpoints/FlowNet2_checkpoint.pth.tar")
-    # net.load_state_dict(dict["state_dict"])
-    # end = time.time()
-    # print(end - start)
-    # print('///////')
 
 
 

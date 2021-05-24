@@ -133,7 +133,7 @@ def FN(videopath, sigDIR, String0, ranges, gridnumX, gridnumY):
             img[:, :, 2] = img[:, :, 1]
             img[:, :, 1] = 255
 
-            next_ang = img[..., 0].reshape(gridnumY, 1,gridnumX, 1)#gridheight grid weight 1 1
+            next_ang = (img[..., 0]*2).reshape(gridnumY, 1,gridnumX, 1)#gridheight grid weight 1 1
             next_mag = img[..., 2].reshape(gridnumY, 1, gridnumX, 1)
             SIGS_ang[timepoint] = next_ang.mean(axis=(1, 3))
             SIGS_mag[timepoint] = next_mag.mean(axis=(1, 3))

@@ -147,7 +147,7 @@ def on_EVENT_LBUTTONDOWN(event, x, y,flag,img_width_height_fftNUMPY_VISFFTflag_V
             plt.plot(f, magnitudelist)
             plt.xlabel('freq(Hz)')
             plt.title("positiveHalf fft YX" + str(Y) + "_" + str(X))
-            plt.savefig(img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[7][:-4] + "_" + str(Y) + "_" + str(X) + ".png")
+            # plt.savefig(img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[7][:-4] + "_" + str(Y) + "_" + str(X) + ".png")
             plt.show()
             freqIDMAP = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[-1]
             print(" BestFreq: ",freqIDMAP[Y][X]*df," mag4BestFreq: ",magnitudelist[freqIDMAP[Y][X]])
@@ -155,9 +155,7 @@ def on_EVENT_LBUTTONDOWN(event, x, y,flag,img_width_height_fftNUMPY_VISFFTflag_V
 
             train1 = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[8][:, Y, X][:100]
             x_axix = [i for i in range(100)]
-            # plt.title(
-            #     'SRC signal tendency and magnitude video:' + videoname + " " + mode + " " + note + " " + "realfreq4samples" + str(
-            #         # realfreq4samples))
+
             plt.plot(x_axix, train1, color='red', label="Y,X " + str(Y) + "_" + str(X))
             # plt.plot(x_axix, train2, color='gray', label="Y,X " + str(Y2) + "_" + str(X2))
 
@@ -165,9 +163,9 @@ def on_EVENT_LBUTTONDOWN(event, x, y,flag,img_width_height_fftNUMPY_VISFFTflag_V
 
 
             # pl.semilogy(f, np.abs(np.absolute(pos_Y_from_fft[:,Y,X])))#?
-            plt.xlabel('freq(Hz)')
+            plt.xlabel('frame id')
             plt.title("RAW SIGNAL AT GRID POS YX" + str(Y) + "_" + str(X))
-            plt.savefig(img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[7][:-4] + "_" + str(Y) + "_" + str(X) + "RAW.png")
+            # plt.savefig(img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[7][:-4] + "_" + str(Y) + "_" + str(X) + "RAW.png")
             plt.show()
 
 

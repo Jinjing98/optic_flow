@@ -5,8 +5,8 @@ import time
 # Read input video
 cap = cv2.VideoCapture("D:\Study\Datasets\\moreCam.mp4")
 stable_path = "D:\Study\Datasets\\moreCam\\stable\\"
-cap = cv2.VideoCapture("D:\Study\Datasets\\moreCamBest.mp4")
-stable_path = "D:\Study\Datasets\\moreCamBestNontrembling\\set\\"
+# cap = cv2.VideoCapture("D:\Study\Datasets\\moreCamBest.mp4")
+# stable_path = "D:\Study\Datasets\\moreCamBestNontrembling\\set\\"
 # cap = cv2.VideoCapture(0)
 
 # Get frame count
@@ -82,8 +82,9 @@ for i in range(n_frames - 2):
         print("jinjing")
 
     # Find transformation matrix
+    #warp_mat = cv.getAffineTransform(srcTri, dstTri)
     m = cv2.estimateRigidTransform(prev_pts, curr_pts, fullAffine=False)  # will only work with OpenCV-3 or less
-
+    # m = cv2.getAffineTransform(prev_pts, curr_pts)
     if m is None: #jinjing
         m = m_last
         # Extract traslation
@@ -148,8 +149,8 @@ trajectory = np.cumsum(transforms, axis=0)
 difference = smooth(trajectory) - trajectory
 
 # Calculate newer transformation array
-transforms_smooth = transforms + difference    #  换成-traj  (注意不是-trajectory) 可以完全消除运动
-# transforms_smooth = -trajectory
+# transforms_smooth = transforms + difference    #  换成-traj  (注意不是-trajectory) 可以完全消除运动
+transforms_smooth = -trajectory
 
 # Reset stream to first frame
 cap.set(cv2.CAP_PROP_POS_FRAMES, 0)
@@ -178,8 +179,12 @@ for i in range(n_frames - 2):
     # Apply affine wrapping to the given frame
     frame_stabilized = cv2.warpAffine(frame, m, (w, h))
 
+
+
+#        T = cv2.getRotationMatrix2D((s[1] / 2, s[0] / 2), 0, 1.04)
+#         frame = cv2.warpAffine(frame, T, (s[1], s[0]))
     # Fix border artifacts
-    frame_stabilized = fixBorder(frame_stabilized)
+    # frame_stabilized = fixBorder(frame_stabilized)
 
     # Write the frame to the file
     frame_out = cv2.hconcat([frame, frame_stabilized])

@@ -154,7 +154,7 @@ def on_EVENT_LBUTTONDOWN(event, x, y,flag,img_width_height_fftNUMPY_VISFFTflag_V
         if img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[5]:  # is visRAW
 
             train1 = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[8][:, Y, X][:100]
-            x_axix = [i for i in range(100)]
+            x_axix = [i for i in range(100)] if len(train1) == 100 else [i for i in range(len(train1))]
 
             plt.plot(x_axix, train1, color='red', label="Y,X " + str(Y) + "_" + str(X))
             # plt.plot(x_axix, train2, color='gray', label="Y,X " + str(Y2) + "_" + str(X2))

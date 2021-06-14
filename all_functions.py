@@ -71,7 +71,7 @@ def significant_peaktest(idx,fft_result,top10_ID):
     magnitude = np.abs(np.absolute(fft_result[idx]))
     mean_mag = np.mean(np.abs(np.absolute(fft_result[top10_ID])))
     # mag_left = np.abs(np.absolute(fft_result[idx-1]))
-    return (magnitude>mean_mag*1.2)
+    return (magnitude>mean_mag*1)#1.2)
 def check2Harm(secondHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y):
     if (int(secondHarmonicIDX) in topharmonic_ID[:, y, x]):
         return True,secondHarmonicIDX
@@ -124,7 +124,7 @@ def test1(pos_Y_from_fft,precision4given,top10_ID,topharmonic_ID,df,given_freq,m
     for y in range(gridnumy):
         for x in range(gridnumx):
             if mask2D[y,x]:
-                if y == 248 and x==231:
+                if y == 298 and x==265:
                     print()
                 index = top10_ID_filter[closest_layer_number[y,x],y,x]
                 bestIDX[y, x] = index
@@ -471,7 +471,7 @@ def fft_window(conv_times,visuliseFFT,visuliseRAW,top,top4harmonic,fps,givenfreq
    # this func can interatively show curve
     cv2.setMouseCallback("image", on_EVENT_LBUTTONDOWN, img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP)
     cv2.imshow("image", mask_2dCP)
-    cv2.waitKey(1)
+    cv2.waitKey(0)
     mask_path = path_prefix+"mask.png"
     cv2.imwrite(mask_path, mask_2dCP)#mask_2d
     end = time.time()
@@ -500,7 +500,12 @@ def gridsig_generate():
     newpath2sig = meansigarrayDIR + mode + "\\" + note + "\size" + str(gridnumx) + "_" + str(
         gridnumy) + "\\" + "SIGS_" + mode + "_" + str(gridnumx) + "_" + str(gridnumy) + "_" + str(
         time_range[0]) + "_" + str(time_range[1]) + note + ".npy"
-    sig = np.load(path2sig)
+
+    try:
+        sig = np.load(path2sig)
+    except IOError:
+        pixelwisesig_generate(mode)
+        sig = np.load(path2sig)
     sig = sig.reshape(-1, gridnumy, int(imgy / gridnumy), gridnumx, int(imgx / gridnumx))
     newsig = sig.mean(axis=(2, 4))
     np.save(newpath2sig, newsig)
@@ -518,110 +523,114 @@ def gridsig_generate():
 
 
 #params you may want to change
-fps = 25
+fps = 30
 # 可以非整除
-realfreq4samples = 25  # it is not the final real freq
+realfreq4samples = 30  # it is not the final real freq
 fmt = ".avi"#".mp4"#".avi"  #.map4 is ori video suitable for everything except FN,.avi is resize suitable for everything
 precision4given = 0.11#
-top = 5#20#10#20  #keep right there, only take up the highest 20 ID into account
-top4harmonic =20#25#25
+
 extensionDir = "D:\Study\Datasets\extension\\"
 extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\irreg_motion\\"
 extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulseNstatic\\"
 # extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\\arti_videos\\"
-extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\\test\\"
-
+extensionDir = "D:\Study\Datasets\AATEST\\new_short\\"
+# extensionDir = "D:\Study\Datasets\AATEST\shortclips\shortclips\\"
 #
 # # params change frequently
 imgx =   512#360#512#854#720#360#854#360
 imgy = 384#288#384#480#288#480#288
-# gridnumx =  32#512#32#128#512#  32#128#512#32#128#  512#32#32#128#512#32#128#512 # 32#128#512#128#32#512#32#512#32#512#32#512#32#64#512#64#512#32#64#512#256#64#512#256#128#64#32#512#45#360#512# 128#512#32#128#512#360#  512#128#32#128#512#32#128#512# 32#128#512#128#512#32#512#32#512#32# 256#512#32#64#  128#32#64#128#256#512#32#64#128#256#512#45#90#180#360#180#360#512#854#720#360#854#360#180#90#360#90#180#360#720#180#72#36#36#18#360#180#18#36#72
-# gridnumy =  24#384#24#96#384#24#96# 384#24#96#384#24#24#96#384#24#96#384#24#96#384 #96#24#384#24#384#24#384#24#384#24#48#384#48#384#24#48#384#192#48# 384#192#96#48#24#36#384#36#288#384#96#384# 24#96#384#288# 384#96#96#384# 24#96#384#24#96#384#96#384#24#384#2
+gridnumx = 512#32#512#32#512#32#128#512#  32#128#512#32#128#  512#32#32#128#512#32#128#512 # 32#128#512#128#32#512#32#512#32#512#32#512#32#64#512#64#512#32#64#512#256#64#512#256#128#64#32#512#45#360#512# 128#512#32#128#512#360#  512#128#32#128#512#32#128#512# 32#128#512#128#512#32#512#32#512#32# 256#512#32#64#  128#32#64#128#256#512#32#64#128#256#512#45#90#180#360#180#360#512#854#720#360#854#360#180#90#360#90#180#360#720#180#72#36#36#18#360#180#18#36#72
+gridnumy = 384#24#384#24#384#24#96#384#24#96# 384#24#96#384#24#24#96#384#24#96#384#24#96#384 #96#24#384#24#384#24#384#24#384#24#48#384#48#384#24#48#384#192#48# 384#192#96#48#24#36#384#36#288#384#96#384# 24#96#384#288# 384#96#96#384# 24#96#384#24#96#384#96#384#24#384#2
+videoname = "6"#"11"#"11"#"h3"#"3"#"cardNresp1"#"card1"#"WinB25"#"resp3"#"card1"# \"+videoname+"#BINW25  WINB127 WINB25
+givenfreq = 1.6#0.95#1.25#1.3#1.3#1.3#0.8#1.25#1.3#1.5#1.25#0.8#1.25#0.8#1#0.8#1.5#2.3# 0.8#0.35#1.5   # edit it to 1.1  the result is not good as expected!
+time_range = [15,20]#[1,8]#35 [21,31]#[0,20]
+conv_times =1#2#2# 0 #(0,1,2,3)  0 mean no colv   when you set this to true, make sure the note is "ang"
+mode = "FN"# "HS"  #gray   HS  FN GF
+note ="mag"#"mag"#"mag"#"mag"#"mag"# "ang" "mag"
+
+#
+
+t = time_range[1]-time_range[0]
+unit = round(t/5.0)
+# unit = 3
+top = 5*unit#20#10#20  #keep right there, only take up the highest 20 ID into account
+top4harmonic =20*unit#25#25
+step = round(fps /realfreq4samples)
+real_sample_freq = float(fps) / step
+df =  real_sample_freq/ (t*real_sample_freq - 1)
+sigmoid4t =  1/(1 + np.exp(-(t/15)))  #definately bigger than (0.5,1)  # suppose out video 5s-20s
+sigmoid4given = 1/(1 + np.exp(-givenfreq)) # (0.5,1)#positively related to givenfreq, at the same time restrict it in [0,1]
+String0 = str(gridnumx)+"_"+str(gridnumy)
+String = str(gridnumx)+"_"+str(gridnumy)+"_"+str(top)+"_"+str(top4harmonic)+"_"+str(conv_times)+"_"+str(precision4given)+"_"+str(givenfreq)
+String3 =str(time_range[0])+"_"+str(time_range[1])+"_"+str(top)+"_"+str(top4harmonic)+"_"+str(conv_times)+"_"+str(precision4given)+"_"+str(givenfreq)
+videopath = extensionDir+videoname+fmt
+meansigarrayDIR = extensionDir+videoname+"\\"
+meansigarrayPath = meansigarrayDIR+mode+"\\"+note+"\size"+String0+"\\"+"SIGS_"+mode+"_"+String0+"_"+str(time_range[0])+"_"+str(time_range[1])+note+".npy"
+infoMatDIR = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\\"
+infoMatPath = infoMatDIR+String+"_"+"infoMat_mask_ID"+".npy"
+# mask_path = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\Mask"+String+".png"  #  the best mask!
+path_prefix = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\\"+String3
+gt_img_path = meansigarrayDIR+videoname+".png"
+eval_txt_path = meansigarrayDIR+"evaluation.txt"
+
+
+
+# pixelwisesig_generate(mode)  # CARRY OUT THIS FOR ONE TIME with pixel wise mose THEN COMMENT OUT
+# #generate grid sig
+#
+gridsig_generate()# this is used when increase the grid size,the pixel wise sig to generate obj sig without import video ,OF computing etc.
+#
+flag,df,realtotalNUM = fft_window(conv_times,1,1,top,top4harmonic,fps, givenfreq,precision4given,meansigarrayPath,infoMatPath, realfreq4samples )#, [0.1, 0.3])
+# writetoevaluation(imgx,gridnumx,imgy,gridnumy,gt_img_path,infoMatPath,eval_txt_path)
+# draw2pointsRAW_FFT(vispos_YX,vispos_YX2,realfreq4samples,t,mode,note,gridnumx,gridnumy,time_range,meansigarrayDIR,df,videoname)
+
+
+#
+# extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulse_today\\"
 # videoname = "1"#"11"#"11"#"h3"#"3"#"cardNresp1"#"card1"#"WinB25"#"resp3"#"card1"# \"+videoname+"#BINW25  WINB127 WINB25
 # givenfreq = 1.0#0.95#1.25#1.3#1.3#1.3#0.8#1.25#1.3#1.5#1.25#0.8#1.25#0.8#1#0.8#1.5#2.3# 0.8#0.35#1.5   # edit it to 1.1  the result is not good as expected!
 # time_range = [1,5]#[1,8]#35 [21,31]#[0,20]
 # conv_times =1#2#2# 0 #(0,1,2,3)  0 mean no colv   when you set this to true, make sure the note is "ang"
-# mode = "GF"# "HS"  #gray   HS  FN GF
-# note = "mag"#"mag"#"mag"#"mag"#"mag"# "ang" "mag"
+# numx_list = [512,128,32]
+# numy_list = [384,96,24]
+# mode_list = ["gray","GF","GF","FN","FN","HS","HS"]
+# note_list = ["","mag","ang","mag","ang","mag","ang"]
+# for mode,note in zip(mode_list,note_list):
+#     for gridnumx, gridnumy in zip(numx_list, numy_list):
 #
-# #
-# t = time_range[1]-time_range[0]
-# step = round(fps /realfreq4samples)
-# real_sample_freq = float(fps) / step
-# df =  real_sample_freq/ (t*real_sample_freq - 1)
-# sigmoid4t =  1/(1 + np.exp(-(t/15)))  #definately bigger than (0.5,1)  # suppose out video 5s-20s
-# sigmoid4given = 1/(1 + np.exp(-givenfreq)) # (0.5,1)#positively related to givenfreq, at the same time restrict it in [0,1]
-# String0 = str(gridnumx)+"_"+str(gridnumy)
-# String = str(gridnumx)+"_"+str(gridnumy)+"_"+str(top)+"_"+str(top4harmonic)+"_"+str(conv_times)+"_"+str(precision4given)+"_"+str(givenfreq)
+#         #
+#         t = time_range[1] - time_range[0]
+#         step = round(fps / realfreq4samples)
+#         real_sample_freq = float(fps) / step
+#         df = real_sample_freq / (t * real_sample_freq - 1)
+#         sigmoid4t = 1 / (1 + np.exp(-(t / 15)))  # definately bigger than (0.5,1)  # suppose out video 5s-20s
+#         sigmoid4given = 1 / (1 + np.exp(
+#             -givenfreq))  # (0.5,1)#positively related to givenfreq, at the same time restrict it in [0,1]
+#         String0 = str(gridnumx) + "_" + str(gridnumy)
+#         String = str(gridnumx) + "_" + str(gridnumy) + "_" + str(top) + "_" + str(top4harmonic) + "_" + str(
+#             conv_times) + "_" + str(precision4given) + "_" + str(givenfreq)
 #
-# videopath = extensionDir+videoname+fmt
-# meansigarrayDIR = extensionDir+videoname+"\\"
-# meansigarrayPath = meansigarrayDIR+mode+"\\"+note+"\size"+String0+"\\"+"SIGS_"+mode+"_"+String0+"_"+str(time_range[0])+"_"+str(time_range[1])+note+".npy"
-# infoMatDIR = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\\"
-# infoMatPath = infoMatDIR+String+"_"+"infoMat_mask_ID"+".npy"
-# # mask_path = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\Mask"+String+".png"  #  the best mask!
-# path_prefix = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\\"+String
-# gt_img_path = meansigarrayDIR+videoname+".png"
-# eval_txt_path = meansigarrayDIR+"evaluation.txt"
+#         videopath = extensionDir + videoname + fmt
+#         meansigarrayDIR = extensionDir + videoname + "\\"
+#         meansigarrayPath = meansigarrayDIR + mode + "\\" + note + "\size" + String0 + "\\" + "SIGS_" + mode + "_" + String0 + "_" + str(
+#             time_range[0]) + "_" + str(time_range[1]) + note + ".npy"
+#         infoMatDIR = extensionDir + videoname + "\\" + mode + "\\" + note + "\size" + String0 + "\\"
+#         infoMatPath = infoMatDIR + String + "_" + "infoMat_mask_ID" + ".npy"
+#         # mask_path = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\Mask"+String+".png"  #  the best mask!
+#         path_prefix = extensionDir + videoname + "\\" + mode + "\\" + note + "\size" + String0 + "\\" + String
+#         gt_img_path = meansigarrayDIR + videoname + ".png"
+#         eval_txt_path = meansigarrayDIR + "evaluation.txt"
 #
 #
 #
-# # pixelwisesig_generate(mode)  # CARRY OUT THIS FOR ONE TIME with pixel wise mose THEN COMMENT OUT
-# # #generate grid sig
-# #
-# gridsig_generate()# this is used when increase the grid size,the pixel wise sig to generate obj sig without import video ,OF computing etc.
-# #
-# flag,df,realtotalNUM = fft_window(conv_times,1,1,top,top4harmonic,fps, givenfreq,precision4given,meansigarrayPath,infoMatPath, realfreq4samples )#, [0.1, 0.3])
-# # writetoevaluation(imgx,gridnumx,imgy,gridnumy,gt_img_path,infoMatPath,eval_txt_path)
-# # draw2pointsRAW_FFT(vispos_YX,vispos_YX2,realfreq4samples,t,mode,note,gridnumx,gridnumy,time_range,meansigarrayDIR,df,videoname)
-
-
-
-extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulse_today\\"
-videoname = "1"#"11"#"11"#"h3"#"3"#"cardNresp1"#"card1"#"WinB25"#"resp3"#"card1"# \"+videoname+"#BINW25  WINB127 WINB25
-givenfreq = 1.0#0.95#1.25#1.3#1.3#1.3#0.8#1.25#1.3#1.5#1.25#0.8#1.25#0.8#1#0.8#1.5#2.3# 0.8#0.35#1.5   # edit it to 1.1  the result is not good as expected!
-time_range = [1,5]#[1,8]#35 [21,31]#[0,20]
-conv_times =1#2#2# 0 #(0,1,2,3)  0 mean no colv   when you set this to true, make sure the note is "ang"
-numx_list = [512,128,32]
-numy_list = [384,96,24]
-mode_list = ["gray","GF","GF","FN","FN","HS","HS"]
-note_list = ["","mag","ang","mag","ang","mag","ang"]
-for mode,note in zip(mode_list,note_list):
-    for gridnumx, gridnumy in zip(numx_list, numy_list):
-
-        #
-        t = time_range[1] - time_range[0]
-        step = round(fps / realfreq4samples)
-        real_sample_freq = float(fps) / step
-        df = real_sample_freq / (t * real_sample_freq - 1)
-        sigmoid4t = 1 / (1 + np.exp(-(t / 15)))  # definately bigger than (0.5,1)  # suppose out video 5s-20s
-        sigmoid4given = 1 / (1 + np.exp(
-            -givenfreq))  # (0.5,1)#positively related to givenfreq, at the same time restrict it in [0,1]
-        String0 = str(gridnumx) + "_" + str(gridnumy)
-        String = str(gridnumx) + "_" + str(gridnumy) + "_" + str(top) + "_" + str(top4harmonic) + "_" + str(
-            conv_times) + "_" + str(precision4given) + "_" + str(givenfreq)
-
-        videopath = extensionDir + videoname + fmt
-        meansigarrayDIR = extensionDir + videoname + "\\"
-        meansigarrayPath = meansigarrayDIR + mode + "\\" + note + "\size" + String0 + "\\" + "SIGS_" + mode + "_" + String0 + "_" + str(
-            time_range[0]) + "_" + str(time_range[1]) + note + ".npy"
-        infoMatDIR = extensionDir + videoname + "\\" + mode + "\\" + note + "\size" + String0 + "\\"
-        infoMatPath = infoMatDIR + String + "_" + "infoMat_mask_ID" + ".npy"
-        # mask_path = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\Mask"+String+".png"  #  the best mask!
-        path_prefix = extensionDir + videoname + "\\" + mode + "\\" + note + "\size" + String0 + "\\" + String
-        gt_img_path = meansigarrayDIR + videoname + ".png"
-        eval_txt_path = meansigarrayDIR + "evaluation.txt"
-
-
-
-
-
-        if gridnumx == 512 and note != "ang":
-            pixelwisesig_generate(mode)  # CARRY OUT THIS FOR ONE TIME with pixel wise mose THEN COMMENT OUT
-            # pass
-        gridsig_generate()  # this is used when increase the grid size,the pixel wise sig to generate obj sig without import video ,OF computing etc.
-        #
-        flag, df, realtotalNUM = fft_window(conv_times, 1, 1, top, top4harmonic, fps, givenfreq, precision4given,
-                                            meansigarrayPath, infoMatPath, realfreq4samples)  # , [0.1, 0.3])
-        writetoevaluation(imgx, gridnumx, imgy, gridnumy, gt_img_path, infoMatPath, eval_txt_path)
-
+#
+#
+#         if gridnumx == 512 and note != "ang":
+#             pixelwisesig_generate(mode)  # CARRY OUT THIS FOR ONE TIME with pixel wise mose THEN COMMENT OUT
+#             # pass
+#         gridsig_generate()  # this is used when increase the grid size,the pixel wise sig to generate obj sig without import video ,OF computing etc.
+#         #
+#         flag, df, realtotalNUM = fft_window(conv_times, 1, 1, top, top4harmonic, fps, givenfreq, precision4given,
+#                                             meansigarrayPath, infoMatPath, realfreq4samples)  # , [0.1, 0.3])
+#         writetoevaluation(imgx, gridnumx, imgy, gridnumy, gt_img_path, infoMatPath, eval_txt_path)
+#

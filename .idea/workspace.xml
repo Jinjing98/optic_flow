@@ -23,16 +23,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06aefe3e-824e-4afc-8c5a-c6d3bb2d679d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/all_functionsBU3.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/all_functions_BU2.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/evaluation.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/getTruth.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/matched_idxNpos.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/flownet2-pytorch.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/flownet2-pytorch.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/RESIZEvideo.py" beforeDir="false" afterPath="$PROJECT_DIR$/RESIZEvideo.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/all_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/all_functions.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/test.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -90,6 +83,28 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="RESIZEvideo" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="flownet2-pytorch" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/RESIZEvideo.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <configuration name="all_functions" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="flownet2-pytorch" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -104,28 +119,6 @@
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/all_functions.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
-    <configuration name="all_functions_FINAL_BACKUP" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="flownet2-pytorch" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/all_functions_FINAL_BACKUP.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -181,10 +174,10 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.all_functions" />
+        <item itemvalue="Python.RESIZEvideo" />
         <item itemvalue="Python.getTruth" />
         <item itemvalue="Python.evaluation" />
         <item itemvalue="Python.FlowAndSignal" />
-        <item itemvalue="Python.all_functions_FINAL_BACKUP" />
       </list>
     </recent_temporary>
   </component>
@@ -245,6 +238,7 @@
       <workItem from="1623072108937" duration="50508000" />
       <workItem from="1623222558888" duration="18854000" />
       <workItem from="1623305229138" duration="11465000" />
+      <workItem from="1623588029305" duration="22017000" />
     </task>
     <servers />
   </component>
@@ -278,52 +272,52 @@
     <state x="506" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1622476988395" />
     <state x="506" y="153" key="FileChooserDialogImpl/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621354343253" />
     <state x="2553" y="191" key="FileChooserDialogImpl/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620888097298" />
-    <state width="1241" height="119" key="GridCell.Tab.0.bottom" timestamp="1623315316849">
+    <state width="1384" height="320" key="GridCell.Tab.0.bottom" timestamp="1623667703668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1241" height="119" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1623315316849" />
+    <state width="1384" height="320" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
     <state width="1328" height="229" key="GridCell.Tab.0.bottom/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
     <state width="1877" height="257" key="GridCell.Tab.0.bottom/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1241" height="119" key="GridCell.Tab.0.center" timestamp="1623315316849">
+    <state width="1384" height="320" key="GridCell.Tab.0.center" timestamp="1623667703668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1241" height="119" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1623315316849" />
+    <state width="1384" height="320" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
     <state width="1328" height="229" key="GridCell.Tab.0.center/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
     <state width="1877" height="257" key="GridCell.Tab.0.center/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1241" height="119" key="GridCell.Tab.0.left" timestamp="1623315316849">
+    <state width="1384" height="320" key="GridCell.Tab.0.left" timestamp="1623667703668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1241" height="119" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1623315316849" />
+    <state width="1384" height="320" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
     <state width="1328" height="229" key="GridCell.Tab.0.left/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
     <state width="1877" height="257" key="GridCell.Tab.0.left/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1241" height="119" key="GridCell.Tab.0.right" timestamp="1623315316849">
+    <state width="1384" height="320" key="GridCell.Tab.0.right" timestamp="1623667703668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1241" height="119" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1623315316849" />
+    <state width="1384" height="320" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
     <state width="1328" height="229" key="GridCell.Tab.0.right/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
     <state width="1877" height="257" key="GridCell.Tab.0.right/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1241" height="145" key="GridCell.Tab.1.bottom" timestamp="1623311491546">
+    <state width="1384" height="320" key="GridCell.Tab.1.bottom" timestamp="1623667703668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1241" height="145" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1623311491546" />
+    <state width="1384" height="320" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
     <state width="1328" height="229" key="GridCell.Tab.1.bottom/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
     <state width="1877" height="257" key="GridCell.Tab.1.bottom/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1241" height="145" key="GridCell.Tab.1.center" timestamp="1623311491546">
+    <state width="1384" height="320" key="GridCell.Tab.1.center" timestamp="1623667703668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1241" height="145" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1623311491546" />
+    <state width="1384" height="320" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
     <state width="1328" height="229" key="GridCell.Tab.1.center/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
     <state width="1877" height="257" key="GridCell.Tab.1.center/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1241" height="145" key="GridCell.Tab.1.left" timestamp="1623311491546">
+    <state width="1384" height="320" key="GridCell.Tab.1.left" timestamp="1623667703668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1241" height="145" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1623311491546" />
+    <state width="1384" height="320" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
     <state width="1328" height="229" key="GridCell.Tab.1.left/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
     <state width="1877" height="257" key="GridCell.Tab.1.left/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1241" height="145" key="GridCell.Tab.1.right" timestamp="1623311491546">
+    <state width="1384" height="320" key="GridCell.Tab.1.right" timestamp="1623667703668">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1241" height="145" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1623311491546" />
+    <state width="1384" height="320" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
     <state width="1328" height="229" key="GridCell.Tab.1.right/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
     <state width="1877" height="257" key="GridCell.Tab.1.right/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
     <state x="627" y="79" key="RollbackChangesDialog" timestamp="1620752126878">
@@ -342,10 +336,10 @@
       <screen x="1920" y="0" width="1920" height="1030" />
     </state>
     <state x="2683" y="433" key="com.intellij.openapi.vcs.update.UpdateOrStatusOptionsDialogupdate-v2/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620902333039" />
-    <state x="796" y="319" width="598" height="490" key="dock-window-1" timestamp="1620769103293">
+    <state x="804" y="162" width="584" height="391" key="dock-window-1" timestamp="1623661198505">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="796" y="319" width="598" height="490" key="dock-window-1/0.0.1536.824@0.0.1536.824" timestamp="1620769103293" />
+    <state x="804" y="162" width="584" height="391" key="dock-window-1/0.0.1536.824@0.0.1536.824" timestamp="1623661198505" />
     <state x="654" y="146" width="672" height="679" key="search.everywhere.popup" timestamp="1621849341617">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -488,12 +482,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/RESIZEvideo.py</url>
-          <line>48</line>
+          <line>49</line>
           <option name="timeStamp" value="234" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/RESIZEvideo.py</url>
-          <line>31</line>
+          <line>32</line>
           <option name="timeStamp" value="242" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -573,7 +567,7 @@
     <watches-manager>
       <configuration name="PythonConfigurationType">
         <watch expression="pos_x" language="Python" />
-        <watch expression="x0" />
+        <watch expression="x0" language="Python" />
         <watch expression="path4signal" />
       </configuration>
     </watches-manager>
@@ -616,11 +610,11 @@
     <SUITE FILE_PATH="coverage/flownet2_pytorch$addnoise2img.coverage" NAME="addnoise2img Coverage Results" MODIFIED="1610042774977" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$real_time_opticflow.coverage" NAME="real_time_opticflow Coverage Results" MODIFIED="1610283039874" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$video2pic.coverage" NAME="video2pic Coverage Results" MODIFIED="1611530978356" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/flownet2_pytorch$RESIZEvideo.coverage" NAME="RESIZEvideo Coverage Results" MODIFIED="1621197511573" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$all_functions_FINAL_BACKUP.coverage" NAME="all_functions_FINAL_BACKUP Coverage Results" MODIFIED="1623071299432" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/flownet2_pytorch$RESIZEvideo.coverage" NAME="RESIZEvideo Coverage Results" MODIFIED="1623590084153" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$statistics.coverage" NAME="statistics Coverage Results" MODIFIED="1615905210439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$test.coverage" NAME="test Coverage Results" MODIFIED="1621328892588" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/flownet2_pytorch$all_functions.coverage" NAME="all_functions Coverage Results" MODIFIED="1623315316834" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/flownet2_pytorch$all_functions.coverage" NAME="all_functions Coverage Results" MODIFIED="1623667703638" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$warp.coverage" NAME="warp Coverage Results" MODIFIED="1610907739034" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$frames2video.coverage" NAME="frames2video Coverage Results" MODIFIED="1620752268926" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

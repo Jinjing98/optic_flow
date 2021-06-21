@@ -23,9 +23,12 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="06aefe3e-824e-4afc-8c5a-c6d3bb2d679d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/Final_all_functions.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/thresholding.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/RESIZEvideo.py" beforeDir="false" afterPath="$PROJECT_DIR$/RESIZEvideo.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/HS_GF_FN_GRAY_func.py" beforeDir="false" afterPath="$PROJECT_DIR$/HS_GF_FN_GRAY_func.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/all_functions.py" beforeDir="false" afterPath="$PROJECT_DIR$/all_functions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/evaluation.py" beforeDir="false" afterPath="$PROJECT_DIR$/evaluation.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -60,8 +63,8 @@
       <recent name="D:\Study\flownet2-pytorch" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.all_functions">
-    <configuration name="FlowAndSignal" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+  <component name="RunManager" selected="Python.evaluation">
+    <configuration name="Final_all_functions" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="flownet2-pytorch" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -74,7 +77,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/FlowAndSignal.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Final_all_functions.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -149,7 +152,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="getTruth" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="thresholding" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="flownet2-pytorch" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -162,7 +165,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/getTruth.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/thresholding.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -173,11 +176,11 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.evaluation" />
+        <item itemvalue="Python.Final_all_functions" />
+        <item itemvalue="Python.thresholding" />
         <item itemvalue="Python.all_functions" />
         <item itemvalue="Python.RESIZEvideo" />
-        <item itemvalue="Python.getTruth" />
-        <item itemvalue="Python.evaluation" />
-        <item itemvalue="Python.FlowAndSignal" />
       </list>
     </recent_temporary>
   </component>
@@ -238,7 +241,9 @@
       <workItem from="1623072108937" duration="50508000" />
       <workItem from="1623222558888" duration="18854000" />
       <workItem from="1623305229138" duration="11465000" />
-      <workItem from="1623588029305" duration="22017000" />
+      <workItem from="1623588029305" duration="22651000" />
+      <workItem from="1623670148771" duration="44618000" />
+      <workItem from="1624286271376" duration="468000" />
     </task>
     <servers />
   </component>
@@ -272,62 +277,62 @@
     <state x="506" y="153" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1622476988395" />
     <state x="506" y="153" key="FileChooserDialogImpl/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621354343253" />
     <state x="2553" y="191" key="FileChooserDialogImpl/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620888097298" />
-    <state width="1384" height="320" key="GridCell.Tab.0.bottom" timestamp="1623667703668">
+    <state width="762" height="204" key="GridCell.Tab.0.bottom" timestamp="1624274975411">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1384" height="320" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
-    <state width="1328" height="229" key="GridCell.Tab.0.bottom/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
+    <state width="762" height="204" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1624274975411" />
+    <state width="1484" height="271" key="GridCell.Tab.0.bottom/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1624257539404" />
     <state width="1877" height="257" key="GridCell.Tab.0.bottom/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1384" height="320" key="GridCell.Tab.0.center" timestamp="1623667703668">
+    <state width="762" height="204" key="GridCell.Tab.0.center" timestamp="1624274975411">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1384" height="320" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
-    <state width="1328" height="229" key="GridCell.Tab.0.center/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
+    <state width="762" height="204" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1624274975411" />
+    <state width="1484" height="271" key="GridCell.Tab.0.center/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1624257539404" />
     <state width="1877" height="257" key="GridCell.Tab.0.center/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1384" height="320" key="GridCell.Tab.0.left" timestamp="1623667703668">
+    <state width="762" height="204" key="GridCell.Tab.0.left" timestamp="1624274975411">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1384" height="320" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
-    <state width="1328" height="229" key="GridCell.Tab.0.left/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
+    <state width="762" height="204" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1624274975411" />
+    <state width="1484" height="271" key="GridCell.Tab.0.left/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1624257539404" />
     <state width="1877" height="257" key="GridCell.Tab.0.left/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1384" height="320" key="GridCell.Tab.0.right" timestamp="1623667703668">
+    <state width="762" height="204" key="GridCell.Tab.0.right" timestamp="1624274975411">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1384" height="320" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
-    <state width="1328" height="229" key="GridCell.Tab.0.right/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
+    <state width="762" height="204" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1624274975411" />
+    <state width="1484" height="271" key="GridCell.Tab.0.right/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1624257539404" />
     <state width="1877" height="257" key="GridCell.Tab.0.right/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1384" height="320" key="GridCell.Tab.1.bottom" timestamp="1623667703668">
+    <state width="1484" height="271" key="GridCell.Tab.1.bottom" timestamp="1624261485143">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1384" height="320" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
-    <state width="1328" height="229" key="GridCell.Tab.1.bottom/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
+    <state width="1484" height="271" key="GridCell.Tab.1.bottom/0.0.1536.824@0.0.1536.824" timestamp="1624261485143" />
+    <state width="1484" height="271" key="GridCell.Tab.1.bottom/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1624257564306" />
     <state width="1877" height="257" key="GridCell.Tab.1.bottom/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1384" height="320" key="GridCell.Tab.1.center" timestamp="1623667703668">
+    <state width="1484" height="271" key="GridCell.Tab.1.center" timestamp="1624261485143">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1384" height="320" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
-    <state width="1328" height="229" key="GridCell.Tab.1.center/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
+    <state width="1484" height="271" key="GridCell.Tab.1.center/0.0.1536.824@0.0.1536.824" timestamp="1624261485143" />
+    <state width="1484" height="271" key="GridCell.Tab.1.center/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1624257564306" />
     <state width="1877" height="257" key="GridCell.Tab.1.center/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1384" height="320" key="GridCell.Tab.1.left" timestamp="1623667703668">
+    <state width="1484" height="271" key="GridCell.Tab.1.left" timestamp="1624261485143">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1384" height="320" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
-    <state width="1328" height="229" key="GridCell.Tab.1.left/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
+    <state width="1484" height="271" key="GridCell.Tab.1.left/0.0.1536.824@0.0.1536.824" timestamp="1624261485143" />
+    <state width="1484" height="271" key="GridCell.Tab.1.left/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1624257564306" />
     <state width="1877" height="257" key="GridCell.Tab.1.left/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
-    <state width="1384" height="320" key="GridCell.Tab.1.right" timestamp="1623667703668">
+    <state width="1484" height="271" key="GridCell.Tab.1.right" timestamp="1624261485143">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1384" height="320" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1623667703668" />
-    <state width="1328" height="229" key="GridCell.Tab.1.right/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1621358852097" />
+    <state width="1484" height="271" key="GridCell.Tab.1.right/0.0.1536.824@0.0.1536.824" timestamp="1624261485143" />
+    <state width="1484" height="271" key="GridCell.Tab.1.right/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1624257564306" />
     <state width="1877" height="257" key="GridCell.Tab.1.right/1920.0.1920.1030/0.0.1536.824@1920.0.1920.1030" timestamp="1620975055379" />
     <state x="627" y="79" key="RollbackChangesDialog" timestamp="1620752126878">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="627" y="79" key="RollbackChangesDialog/1920.0.1920.1030/0.0.1536.824@0.0.1536.824" timestamp="1620752126878" />
-    <state x="203" y="0" key="SettingsEditor" timestamp="1623072249017">
+    <state x="203" y="0" key="SettingsEditor" timestamp="1624274887800">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="203" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1623072249017" />
+    <state x="203" y="0" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1624274887800" />
     <state width="498" height="446" key="SwitcherDM" timestamp="1620749275761">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -462,22 +467,22 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/HS_GF_FN_GRAY_func.py</url>
-          <line>244</line>
+          <line>250</line>
           <option name="timeStamp" value="221" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/HS_GF_FN_GRAY_func.py</url>
-          <line>199</line>
+          <line>205</line>
           <option name="timeStamp" value="227" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/HS_GF_FN_GRAY_func.py</url>
-          <line>193</line>
+          <line>199</line>
           <option name="timeStamp" value="229" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/HS_GF_FN_GRAY_func.py</url>
-          <line>196</line>
+          <line>202</line>
           <option name="timeStamp" value="230" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -492,7 +497,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/HS_GF_FN_GRAY_func.py</url>
-          <line>155</line>
+          <line>161</line>
           <option name="timeStamp" value="243" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -502,12 +507,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/HS_GF_FN_GRAY_func.py</url>
-          <line>241</line>
+          <line>247</line>
           <option name="timeStamp" value="252" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/HS_GF_FN_GRAY_func.py</url>
-          <line>129</line>
+          <line>135</line>
           <option name="timeStamp" value="253" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -542,18 +547,23 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/HS_GF_FN_GRAY_func.py</url>
-          <line>359</line>
+          <line>365</line>
           <option name="timeStamp" value="317" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/evaluation.py</url>
-          <line>148</line>
+          <line>174</line>
           <option name="timeStamp" value="329" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/all_functions.py</url>
           <line>127</line>
           <option name="timeStamp" value="331" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Final_all_functions.py</url>
+          <line>171</line>
+          <option name="timeStamp" value="339" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -579,6 +589,7 @@
     <SUITE FILE_PATH="coverage/flownet2_pytorch$cropNclipVideo.coverage" NAME="cropNclipVideo Coverage Results" MODIFIED="1616750332881" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$pyplot.coverage" NAME="pyplot Coverage Results" MODIFIED="1623071275579" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/../../anaconda3/envs/flownet_env/Lib/site-packages/matplotlib" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$run_more_frames.coverage" NAME="run_more_frames Coverage Results" MODIFIED="1608021825381" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/flownet2_pytorch$Final_all_functions.coverage" NAME="Final_all_functions Coverage Results" MODIFIED="1624274975397" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$hornschunck_real.coverage" NAME="hornschunck_real Coverage Results" MODIFIED="1611405083207" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$bandpass.coverage" NAME="bandpass Coverage Results" MODIFIED="1610632243194" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$gunnarfarnback_real.coverage" NAME="gunnarfarnback_real Coverage Results" MODIFIED="1615149204788" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -586,6 +597,7 @@
     <SUITE FILE_PATH="coverage/flownet2_pytorch$signalProcess2.coverage" NAME="signalProcess2 Coverage Results" MODIFIED="1610199656326" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$cropNclipVideo__1_.coverage" NAME="cropNclipVideo (1) Coverage Results" MODIFIED="1610286597638" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$NNpairNwarp.coverage" NAME="NNpairNwarp Coverage Results" MODIFIED="1615888787325" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/flownet2_pytorch$thresholding.coverage" NAME="thresholding Coverage Results" MODIFIED="1624256803243" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$NN_opticflow.coverage" NAME="NN_opticflow Coverage Results" MODIFIED="1621157188830" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$diluteErosion.coverage" NAME="diluteErosion Coverage Results" MODIFIED="1620191870033" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$run_a_pair.coverage" NAME="run_a_pair Coverage Results" MODIFIED="1610137472450" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
@@ -614,7 +626,7 @@
     <SUITE FILE_PATH="coverage/flownet2_pytorch$RESIZEvideo.coverage" NAME="RESIZEvideo Coverage Results" MODIFIED="1623590084153" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$statistics.coverage" NAME="statistics Coverage Results" MODIFIED="1615905210439" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$test.coverage" NAME="test Coverage Results" MODIFIED="1621328892588" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/flownet2_pytorch$all_functions.coverage" NAME="all_functions Coverage Results" MODIFIED="1623667703638" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/flownet2_pytorch$all_functions.coverage" NAME="all_functions Coverage Results" MODIFIED="1623684153668" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$warp.coverage" NAME="warp Coverage Results" MODIFIED="1610907739034" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/flownet2_pytorch$frames2video.coverage" NAME="frames2video Coverage Results" MODIFIED="1620752268926" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>

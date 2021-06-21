@@ -23,10 +23,16 @@ def FN(videopath, sigDIR, String0, ranges, gridnumX, gridnumY):
         crop_size =  (gridnumX,gridnumY)
         # gridnumX = 512
         # gridnumY = 384
-        PATHMAG = sigDIR + "FN" + "\\"+"mag"+"\size" + String0 + "\\" + "SIGS_" + "FN" + "_" + String0 + "_" + str(
-            ranges[0]) + "_" + str(ranges[1]) + "mag.npy"
-        PATHANG = sigDIR + "FN" +"\\"+"ang"+ "\size" + String0 + "\\" + "SIGS_" + "FN"+ "_" + String0 + "_" + str(
-            ranges[0]) + "_" + str(ranges[1]) + "ang.npy"
+
+
+        PATHMAG = sigDIR + "FN" + "\\" + "mag" + "\size" + String0 + "\\" + "SIGS_" + "FN_" + str(
+			ranges[0]) + "_" + str(
+			ranges[1]) + "mag.npy"  # "SIGS_"+mode+"_"+str(time_range[0])+"_"+str(time_range[1])+note+".npy"
+        PATHANG = sigDIR + "FN" + "\\" + "ang" + "\size" + String0 + "\\" + "SIGS_" + "FN_" + str(
+			ranges[0]) + "_" + str(ranges[1]) + "ang.npy"
+
+
+
 
         cap = cv2.VideoCapture(videopath)
         _, frame1 = cap.read()
@@ -171,9 +177,9 @@ def FN(videopath, sigDIR, String0, ranges, gridnumX, gridnumY):
 
 def HS(videopath,sigDIR,String0,ranges,gridnumX,gridnumY):# videopath,sigDIR,mode,String0,ranges,gridnumX,gridnumY
 
-	PATHMAG = sigDIR + "HS" + "\\"+"mag"+ "\size" + String0 +"\\" + "SIGS_" + "HS" + "_" + String0 + "_" + str(
-		ranges[0]) + "_" + str(ranges[1]) + "mag.npy"
-	PATHANG = sigDIR +"HS" + "\\"+"ang"+ "\size" + String0 + "\\" + "SIGS_" + "HS" + "_" + String0 + "_" + str(
+	PATHMAG = sigDIR + "HS" +"\\"+"mag"+ "\size" + String0 + "\\"+ "SIGS_" + "HS_" + str(
+		ranges[0]) + "_" + str(ranges[1]) + "mag.npy"#"SIGS_"+mode+"_"+str(time_range[0])+"_"+str(time_range[1])+note+".npy"
+	PATHANG = sigDIR + "HS" +"\\"+"ang"+ "\size" + String0 +  "\\" + "SIGS_" + "HS_" + str(
 		ranges[0]) + "_" + str(ranges[1]) + "ang.npy"
 	#mode+"\size"+String0+"\\"+note+"\\"+"SIGS_"+mode+"_"+String0+"_"+str(tim
 
@@ -265,9 +271,9 @@ def HS(videopath,sigDIR,String0,ranges,gridnumX,gridnumY):# videopath,sigDIR,mod
 
 def GF(videopath,sigDIR,String0,ranges,gridnumX,gridnumY):
 	size = (854, 480)
-	PATHMAG = sigDIR + "GF" +"\\"+"mag"+ "\size" + String0 + "\\"+ "SIGS_" + "GF" + "_" + String0 + "_" + str(
-		ranges[0]) + "_" + str(ranges[1]) + "mag.npy"
-	PATHANG = sigDIR + "GF" +"\\"+"ang"+ "\size" + String0 +  "\\" + "SIGS_" + "GF"  + "_" + String0 + "_" + str(
+	PATHMAG = sigDIR + "GF" +"\\"+"mag"+ "\size" + String0 + "\\"+ "SIGS_" + "GF_" + str(
+		ranges[0]) + "_" + str(ranges[1]) + "mag.npy"#"SIGS_"+mode+"_"+str(time_range[0])+"_"+str(time_range[1])+note+".npy"
+	PATHANG = sigDIR + "GF" +"\\"+"ang"+ "\size" + String0 +  "\\" + "SIGS_" + "GF_" + str(
 		ranges[0]) + "_" + str(ranges[1]) + "ang.npy"
 
 	cap = cv2.VideoCapture(videopath)
@@ -362,7 +368,7 @@ def GF(videopath,sigDIR,String0,ranges,gridnumX,gridnumY):
 
 def GRAY(videopath,sigDIR,String0,time_range,gridnumX,gridnumY ):  # choose ranges given a video length to collect npy
     #meansigarrayPath = meansigarrayDIR+mode+"\size"+String0+"\\"+"SIGS_"+mode+"_"+String0+"_"+str(time_range[0])+"_"+str(time_range[1])+".npy"
-    sigpath = sigDIR+"gray"+"\size"+String0+"\\"+"SIGS_"+"gray"+"_"+String0+"_"+str(time_range[0])+"_"+str(time_range[1])+".npy"
+    sigpath = sigDIR+"gray"+"\size"+String0+"\\"+"SIGS_gray"+"_"+str(time_range[0])+"_"+str(time_range[1])+".npy"
 
 
     cap = cv2.VideoCapture(videopath)

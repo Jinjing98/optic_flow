@@ -1,6 +1,32 @@
 import numpy as np
 import cv2
 import os
+from pandas import DataFrame
+# import openpyxl
+a = ["jinjing","zl","kk","m"]
+b = [1,2,3,4]
+c = [11,2,22,33]
+df = DataFrame({"name":a,"age":b,"size":c})
+
+print(df)
+df.to_excel("test.xlsx",index=False)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # truth_path = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulseNstatic\\6\GF\mag\size512_384\\truth.png"
 # path ="D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulseNstatic\\6\GF\mag\size512_384\\512_384_5_15_1_0.11_0.85_infoMat_mask_ID.npy"

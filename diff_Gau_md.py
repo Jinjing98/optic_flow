@@ -11,78 +11,80 @@ FRAMES_TO_PERSIST = 10000000
 
 
 
+#
+# videoname = 2
+# prefix = "D:\Study\Datasets\AAAtest\\"
+
+
 
 videoname = 2
+format = ".avi"
 prefix = "D:\Study\Datasets\AAAtest\\"
-prefix4mask = prefix+str(2)+"\\"
-videopath =  prefix+str(videoname)+".avi"
 
+def diff_mask(videoname,format,prefix):
+    prefix4mask = prefix+str(2)+"\\other\\"
+    videopath =  prefix+str(videoname)+format
+    cap = cv2.VideoCapture(videopath)
+    # Init frame variables
+    first_frame = None
+    next_frame = None
 
+    # Init display font and timeout counters
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    delay_counter = 0
+    movement_persistent_counter = 0
+    i = 0
 
+    # LOOP!
+    while True:
 
+        # Set transient motion detected as false
+        transient_movement_flag = False
 
-cap = cv2.VideoCapture(videopath)
-# Init frame variables
-first_frame = None
-next_frame = None
+        # Read frame
+        ret, frame = cap.read()
+        text = "Unoccupied"
 
-# Init display font and timeout counters
-font = cv2.FONT_HERSHEY_SIMPLEX
-delay_counter = 0
-movement_persistent_counter = 0
-i = 0
+        if not ret:
+            break
+        # frame = imutils.resize(frame, wid)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
-# LOOP!
-while True:
+        gray = cv2.GaussianBlur(gray, (3, 3), 0)
 
-    # Set transient motion detected as false
-    transient_movement_flag = False
+        # If the first frame is nothing, initialise it
+        if first_frame is None: first_frame = gray
 
-    # Read frame
-    ret, frame = cap.read()
-    text = "Unoccupied"
+        delay_counter += 1
 
-    if not ret:
-        break
-    frame = imutils.resize(frame, width=500)
-    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        # Otherwise, set the first frame to compare as the previous frame
+        # But only if the counter reaches the appriopriate value
+        # The delay is to allow relatively slow motions to be counted as large
+        # motions if they're spread out far enough
+        if delay_counter > FRAMES_TO_PERSIST:
+            delay_counter = 0
+            first_frame = next_frame
 
-    gray = cv2.GaussianBlur(gray, (3,3), 0)
+        # Set the next frame to compare (the current frame)
+        next_frame = gray
 
-    # If the first frame is nothing, initialise it
-    if first_frame is None: first_frame = gray
+        # Compare the two frames, find the difference
+        frame_delta = cv2.absdiff(first_frame, next_frame)
+        _, thresh = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)
 
-    delay_counter += 1
+        # Fill in holes via dilate(), and find contours of the thesholds
+        thresh = cv2.dilate(thresh, None, iterations=2)
+        cv2.imshow("", thresh)
+        # cv2.waitKey(0)
 
-    # Otherwise, set the first frame to compare as the previous frame
-    # But only if the counter reaches the appriopriate value
-    # The delay is to allow relatively slow motions to be counted as large
-    # motions if they're spread out far enough
-    if delay_counter > FRAMES_TO_PERSIST:
-        delay_counter = 0
-        first_frame = next_frame
-
-    # Set the next frame to compare (the current frame)
-    next_frame = gray
-
-    # Compare the two frames, find the difference
-    frame_delta = cv2.absdiff(first_frame, next_frame)
-    _,thresh = cv2.threshold(frame_delta, 25, 255, cv2.THRESH_BINARY)
-
-
-    # Fill in holes via dilate(), and find contours of the thesholds
-    thresh = cv2.dilate(thresh, None, iterations=2)
-    cv2.imshow("",thresh)
-    cv2.waitKey(0)
-
-    kk = cv2.waitKey(20) & 0xff
-    if kk == ord('q'):
-        break
-    # Press 's' to save the video
-    elif kk == ord('s'):
-        pass
-
-        path_map = prefix4mask+"vibe_"+str(i)+".png"
-        cv2.imwrite(path_map,thresh)
-    i += 1
+        kk = cv2.waitKey(20) & 0xff
+        if kk == ord('q'):
+            break
+        # Press 's' to save the video
+        elif kk == ord('s'):
+            path_map = prefix4mask + "diff_ID" + str(i) + ".png"
+            print(path_map)
+            cv2.imwrite(path_map, thresh)
+        i += 1
+diff_mask(videoname,format,prefix)
 

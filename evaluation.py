@@ -75,7 +75,54 @@ def generate_stats(imgx,num4indexX,imgy,num4indexY,masksetpath,stage,truthimg_pa
 
 
 
-def generateALLstats4video(imgx,imgy,truthimg_path,path4csv,dir4masksets):
+def generate_stats_VIBEORGAU(truthimg_path,maskpath):# stage = 0/1/2/3
+    # mask0 = np.load(masksetpath)[stage].astype(bool)
+    #
+    # gridwidth = int(imgx / num4indexX)
+    # gridheight = int(imgy / num4indexY)
+    # # mask0 = maskNfreqID_infoMat[i]
+    # y_idx = np.nonzero(mask0)[0]
+    # x_idx = np.nonzero(mask0)[1]
+    # mask0 = np.zeros((imgy, imgx))
+    # for y, x in zip(y_idx, x_idx):
+    #     mask0[y * gridheight:(y + 1) * gridheight, x * gridwidth:(x + 1) * gridwidth] = 1
+    # mask0 = mask0.astype(bool)
+
+    mask0 = cv2.imread(maskpath)[:,:,0].astype(bool)
+    # mask0_vibe = cv2.imread(vibepath).astype(bool)
+
+
+    truth_mask = cv2.imread(truthimg_path)[:, :, 0].astype(bool)
+    TP_mask = np.logical_and(truth_mask, mask0)
+    TN_mask = np.logical_and(1 - truth_mask, 1 - mask0)
+    FP_mask = np.logical_and(1 - truth_mask, mask0)
+    FN_mask = np.logical_and(truth_mask, 1 - mask0)
+
+    TP = np.count_nonzero(TP_mask)
+    FP = np.count_nonzero(FP_mask)
+    TN = np.count_nonzero(TN_mask)
+    FN = np.count_nonzero(FN_mask)
+    Num_pridic_P = TP+FP
+    Num_pridic_N = TN+FN
+    Num_p = TP+FN#np.count_nonzero(truth_mask)
+    Num_n = TN+FP#np.count_nonzero(1 - truth_mask)
+    Total = Num_p+Num_n
+
+    precision =round( TP/Num_pridic_P,3 )if Num_pridic_P != 0 else None#np.count_nonzero(TP_mask)/(np.count_nonzero(TP_mask)+np.count_nonzero(FP_mask))
+    recall = round(TP/Num_p,3 )if Num_p != 0 else None#np.count_nonzero(TP_mask)/(np.count_nonzero(TP_mask)+np.count_nonzero(FN_mask))
+    F1 = round(2*precision*recall/(precision+recall),3 )if precision!= None and recall != None and (precision+recall !=0) else None
+# specificity, false positive rate (FPR), false negative rate (FNR), percentage of wrong classification (PWC)
+    FPR = round(FP/Num_n,3) if Num_n != 0 else None
+    FNR = round(FN/Num_p,3) if Num_p != 0 else None
+    PWC = round((FP+FN)/Total,3)
+    # ID = masksetpath[:100]
+    # specificity = TN/Num_n
+    return [Num_p,Num_n,TP,TN,FP,FN,precision,recall,F1,FPR,FNR,PWC]
+
+
+
+#   gau_vibe_mask_dir    2//other//
+def generateALLstats4video(imgx,imgy,truthimg_path,path4csv,dir4masksets,gau_vibe_mask_dir):
     # field names
     fields = ["methodNmode","numX","numY","mask_stage","P","N","TP","TN","FP","FN","params","precision", "recall", "F1", "FPR", "FNR", "PWC"]
 
@@ -106,6 +153,41 @@ def generateALLstats4video(imgx,imgy,truthimg_path,path4csv,dir4masksets):
                 ROW = [modeNnote[0], num4indexX,num4indexY, params_tail, stage] + LIST
                 print(ROW)
                 csvwriter.writerow(ROW)
+
+        gau_vibe_paths = [y for x in os.walk(gau_vibe_mask_dir) for y in glob(os.path.join(x[0], '*.png'))]
+
+        for path in gau_vibe_paths:
+            mask_gau = path
+            note = re.findall(r"other\\(.*).png", mask_gau)[0]
+            list_gau = generate_stats_VIBEORGAU(truthimg_path,mask_gau)
+            ROW = [ note, None, None, None, None] + list_gau
+            print(ROW)
+            csvwriter.writerow(ROW)
+
+            #
+            #
+            #
+            #
+            #
+            #
+            #
+            # mask_gau = ""
+            # note = re.findall(r"gau_(.*).png", mask_gau)[0]
+            # list_gau = generate_stats_VIBEORGAU(truthimg_path,mask_gau)
+            # ROW = [ "gau_"+note, None, None, None, None] + list_gau
+            # print(ROW)
+            # csvwriter.writerow(ROW)
+            #
+            #
+            # mask_vibe = ""
+            # note = int(re.findall(r"vibe_(.*).png", mask_vibe)[0])
+            # list_vibe = generate_stats_VIBEORGAU(truthimg_path,mask_vibe)
+            # ROW = [ "vibe_"+note, None, None, None, None] + list_vibe
+            # print(ROW)
+            # csvwriter.writerow(ROW)
+
+
+
 
 
 
@@ -439,6 +521,10 @@ def writetoevaluation(imgx,num4indexX,imgy,num4indexY,gt_img_path,infoMatPath,ev
                     f.write('\n')
                     # infoMATlist.append(dir + names)
                 f.write('\n')
+
+
+
+
                 f.close()
 
 #

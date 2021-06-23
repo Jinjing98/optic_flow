@@ -4,6 +4,7 @@ import cv2
 
 
 # https://github.com/yangshiyu89/VIBE/blob/master/vibe_test.py
+#https://blog.csdn.net/qinglongzhan/article/details/82797413
 
 def initial_background(I_gray, N):
     I_pad = np.pad(I_gray, 1, 'symmetric')
@@ -60,35 +61,40 @@ def vibe_detection(I_gray, samples, _min, N, R):
 
 
 videoname = 2
+format = ".avi"
 prefix = "D:\Study\Datasets\AAAtest\\"
-prefix4mask = prefix+str(2)+"\\"
-videopath =  prefix+str(videoname)+".avi"
-cap = cv2.VideoCapture(videopath)
-ret, frame = cap.read()
 
+def vibe_mask(videoname,format,prefix):
+    prefix4mask = prefix + str(videoname) + "\\other\\"
+    videopath = prefix + str(videoname) + format
+    cap = cv2.VideoCapture(videopath)
+    ret, frame = cap.read()
 
-N = 20
-R = 20
-_min = 2
-phai = 16
-frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-samples = initial_background(frame, N)
-i = 0
-while True:
-    # path = os.path.join(rootDir, lists)
-    # frame = cv2.imread(path)
-    # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-    ret, gray = cap.read()
-    gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
-    segMap, samples = vibe_detection(gray, samples, _min, N, R)
-    cv2.imshow('segMap', segMap)
-    kk = cv2.waitKey(20) & 0xff
-    if kk == ord('q'):
-        break
-    # Press 's' to save the video
-    elif kk == ord('s'):
-        path_map = prefix4mask+"vibe_"+str(i)+".png"
-        cv2.imwrite(path_map,segMap)
-    i += 1
+    N = 20
+    R = 20
+    _min = 2
+    phai = 16
+    frame = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    samples = initial_background(frame, N)
+    i = 0
+    while True:
+        # path = os.path.join(rootDir, lists)
+        # frame = cv2.imread(path)
+        # gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        ret, gray = cap.read()
+        gray = cv2.cvtColor(gray, cv2.COLOR_BGR2GRAY)
+        segMap, samples = vibe_detection(gray, samples, _min, N, R)
+        cv2.imshow('segMap', segMap)
+        kk = cv2.waitKey(20) & 0xff
+        if kk == ord('q'):
+            break
+        # Press 's' to save the video
+        elif kk == ord('s'):
+            path_map = prefix4mask + "vibe_ID" + str(i) + ".png"
+            print(path_map)
+            cv2.imwrite(path_map, segMap)
+        i += 1
 
-cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
+vibe_mask(videoname,format,prefix)
+

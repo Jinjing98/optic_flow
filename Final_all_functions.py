@@ -320,8 +320,8 @@ def fft_window(conv_times,visuliseFFT,visuliseRAW,top,top4harmonic,fps,givenfreq
     img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP = (mask_2dCP,gridwidth, gridheight,pos_Y_from_fft,visuliseFFT,visuliseRAW,df,path4signal,array_3d,maskNfreqID_infoMat[1])
    # this func can interatively show curve
     cv2.setMouseCallback("image", on_EVENT_LBUTTONDOWN, img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP)
-    cv2.imshow("image", mask_2dCP)
-    cv2.waitKey(0)
+    # cv2.imshow("image", mask_2dCP)
+    # cv2.waitKey(0)#  non vis interation!
 
 
 
@@ -460,7 +460,8 @@ def gridsig_generate():
 
 
 
-extensionDir = "D:\Study\Datasets\AAAtest\\"#"D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulse_today\\"
+# extensionDir = "D:\Study\Datasets\AAAtest\\"#"D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulse_today\\"
+extensionDir = "D:\Study\Datasets\AATEST\\new_short\\"
 imgx =   512#360#512#854#720#360#854#360
 imgy = 384#288#384#480#288#480#288
 fmt = ".avi"#".mp4"#".avi"  #.map4 is ori video suitable for everything except FN,.avi is resize suitable for everything
@@ -468,7 +469,7 @@ precision4given = 0.11#
 
 
 
-fps = 25
+fps = 30
 videoname = "4"#"11"#"11"#"h3"#"3"#"cardNresp1"#"card1"#"WinB25"#"resp3"#"card1"# \"+videoname+"#BINW25  WINB127 WINB25
 givenfreq = 1.2#0.95#1.25#1.3#1.3#1.3#0.8#1.25#1.3#1.5#1.25#0.8#1.25#0.8#1#0.8#1.5#2.3# 0.8#0.35#1.5   # edit it to 1.1  the result is not good as expected!
 time_range = [0,5]#[1,8]#35 [21,31]#[0,20]
@@ -493,31 +494,33 @@ dir4masksets = meansigarrayDIR  # can recursive search
 gau_vibe_mask_dir = meansigarrayDIR+"other\\"
 
 
-#
-# for mode,note in zip(mode_list,note_list):
-#     for gridnumx, gridnumy in zip(numx_list, numy_list):
-#
-#         String0 = str(gridnumx) + "_" + str(gridnumy)
-#         String = str(gridnumx) + "_" + str(gridnumy) + "_" + str(top) + "_" + str(top4harmonic) + "_" + str(
-#             conv_times) + "_" + str(precision4given) + "_" + str(givenfreq)
-#         String3 = str(time_range[0]) + "s_" + str(time_range[1]) + "s_top" + str(top) + "_" + str(
-#             top4harmonic) + "_conv" + str(conv_times) + "_nbr" + str(precision4given) + "_given" + str(givenfreq)
-#         videopath = extensionDir + videoname + fmt
-#
-#         meansigarrayPath = meansigarrayDIR + mode + "\\" + note + "\size" + String0 + "\\" + "SIGS_" + mode + "_" + str(
-#             time_range[0]) + "_" + str(time_range[1]) + note + ".npy"
-#         path_prefix = extensionDir + videoname + "\\" + mode + "\\" + note + "\size" + String0 + "\\" + String3
-#         masksetpath = path_prefix + "_maskSet.npy"
-#         maskset = np.zeros((4, gridnumy, gridnumx), np.bool)
-#
-#
-#
-#
-#
-#         if gridnumx == 512 and note != "ang":
-#             pixelwisesig_generate(mode)  # CARRY OUT THIS FOR ONE TIME with pixel wise mose THEN COMMENT OUT
-#             # pass
-#         gridsig_generate()  # this is used when increase the grid size,the pixel wise sig to generate obj sig without import video ,OF computing etc.
-#         flag,df,realtotalNUM = fft_window(conv_times,1,1,top,top4harmonic,fps, givenfreq,precision4given,meansigarrayPath, realfreq4samples,path_prefix )#, [0.1, 0.3])
-generateALLstats4video(imgx, imgy, truthimg_path, path4csv, dir4masksets,gau_vibe_mask_dir)
+video_list = [1,2,3,4,5,6]
+givenfreq_list = [1.0,1.7,1.7,1.6,1.6,1.6]
+time_range_list = [[1,6],[1,6],[0,5],[5,10],[9,14],[15,20] ]
+for i in video_list:
+    videoname = str(i)
+    for mode, note in zip(mode_list, note_list):
+        for gridnumx, gridnumy in zip(numx_list, numy_list):
+
+            String0 = str(gridnumx) + "_" + str(gridnumy)
+            String = str(gridnumx) + "_" + str(gridnumy) + "_" + str(top) + "_" + str(top4harmonic) + "_" + str(
+                conv_times) + "_" + str(precision4given) + "_" + str(givenfreq)
+            String3 = str(time_range[0]) + "s_" + str(time_range[1]) + "s_top" + str(top) + "_" + str(
+                top4harmonic) + "_conv" + str(conv_times) + "_nbr" + str(precision4given) + "_given" + str(givenfreq)
+            videopath = extensionDir + videoname + fmt
+
+            meansigarrayPath = meansigarrayDIR + mode + "\\" + note + "\size" + String0 + "\\" + "SIGS_" + mode + "_" + str(
+                time_range[0]) + "_" + str(time_range[1]) + note + ".npy"
+            path_prefix = extensionDir + videoname + "\\" + mode + "\\" + note + "\size" + String0 + "\\" + String3
+            masksetpath = path_prefix + "_maskSet.npy"
+            maskset = np.zeros((4, gridnumy, gridnumx), np.bool)
+
+            if gridnumx == 512 and note != "ang":
+                pixelwisesig_generate(mode)  # CARRY OUT THIS FOR ONE TIME with pixel wise mose THEN COMMENT OUT
+                # pass
+            gridsig_generate()  # this is used when increase the grid size,the pixel wise sig to generate obj sig without import video ,OF computing etc.
+            flag, df, realtotalNUM = fft_window(conv_times, 1, 1, top, top4harmonic, fps, givenfreq, precision4given,
+                                                meansigarrayPath, realfreq4samples, path_prefix)  # , [0.1, 0.3])
+
+# generateALLstats4video(imgx, imgy, truthimg_path, path4csv, dir4masksets,gau_vibe_mask_dir)
 

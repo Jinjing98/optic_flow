@@ -135,7 +135,7 @@ def test1(pos_Y_from_fft,precision4given,top10_ID,topharmonic_ID,df,given_freq,m
     for y in range(gridnumy):
         for x in range(gridnumx):
             if mask2D[y,x]:
-                if y == 248 and x==279:
+                if y == 19 and x==108:
                     print()
                 index = top10_ID_filter[closest_layer_number[y,x],y,x]
                 bestIDX[y, x] = index
@@ -316,12 +316,12 @@ def fft_window(conv_times,visuliseFFT,visuliseRAW,top,top4harmonic,fps,givenfreq
         mask_2d[y * gridheight:(y + 1) * gridheight, x * gridwidth:(x + 1) * gridwidth] = 1
     mask_2d = mask_2d.astype(np.float32) * 255
     mask_2dCP = mask_2d.copy()
-    cv2.namedWindow("image")
+    #cv2.namedWindow("image")
     img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP = (mask_2dCP,gridwidth, gridheight,pos_Y_from_fft,visuliseFFT,visuliseRAW,df,path4signal,array_3d,maskNfreqID_infoMat[1])
    # this func can interatively show curve
-    cv2.setMouseCallback("image", on_EVENT_LBUTTONDOWN, img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP)
-    cv2.imshow("image", mask_2dCP)
-    cv2.waitKey(0)#  non vis interation!
+    #cv2.setMouseCallback("image", on_EVENT_LBUTTONDOWN, img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP)
+    #cv2.imshow("image", mask_2dCP)
+    #cv2.waitKey(0)#  non vis interation!
 
 
 
@@ -461,8 +461,8 @@ def gridsig_generate():
 
 
 # extensionDir = "D:\Study\Datasets\AAAtest\\"#"D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulse_today\\"
-extensionDir = "D:\Study\Datasets\AATEST\\new_short\\"
-extensionDir = "D:\Study\Datasets\AAATEST\\"
+extensionDir = "D:\Study\Datasets\AATEST\\instru_pulse\\"
+# extensionDir = "D:\Study\Datasets\AAATEST\\"
 imgx =   512#360#512#854#720#360#854#360
 imgy = 384#288#384#480#288#480#288
 fmt = ".avi"#".mp4"#".avi"  #.map4 is ori video suitable for everything except FN,.avi is resize suitable for everything
@@ -471,19 +471,28 @@ precision4given = 0.11#
 
 
 fps = 30
-fps = 25
+# fps = 25
 # videoname = "4"#"11"#"11"#"h3"#"3"#"cardNresp1"#"card1"#"WinB25"#"resp3"#"card1"# \"+videoname+"#BINW25  WINB127 WINB25
 # givenfreq = 1.2#0.95#1.25#1.3#1.3#1.3#0.8#1.25#1.3#1.5#1.25#0.8#1.25#0.8#1#0.8#1.5#2.3# 0.8#0.35#1.5   # edit it to 1.1  the result is not good as expected!
 # time_range = [0,5]#[1,8]#35 [21,31]#[0,20]
 conv_times =1#2#2# 0 #(0,1,2,3)  0 mean no colv   when you set this to true, make sure the note is "ang"
-numx_list = [512,256,128,64,32]
-numy_list = [384,192,96,48,24]
-mode_list = ["GF"]#["gray","GF","GF"]#,"FN","FN","HS","HS"]
-note_list = ["ang"]#["","mag","ang"]#,"mag","ang","mag","ang"]
+numx_list = [512]#,256,128,64,32]
+numy_list = [384]#,192,96,48,24]
+mode_list = ["FN","FN"]#["gray","GF","GF"]#,"FN","FN","HS","HS"]
+note_list = ["mag","ang"]#["","mag","ang"]#,"mag","ang","mag","ang"]
 
-video_list = [2]#[1,2,4,11]#[13]#[7,8,9,10,11,12,13,14,15,16]#[1,2,3,4,5,6]#[15]#
-givenfreq_list = [1.0]#[1.0,1.0,1.2,1.3]#[1.5,1.2,1.2,1.2,1.2,1.3,1.3,1.3,1.2,1.5]#[1.0,1.7,1.7,1.6,1.6,1.6]#[1.2]#
-time_range_list =[[1,6]]#[ [1,6],[1,6],[0,5],[26,31]]#[[2,7],[7,12],[18,23],[0,5],[0,5],[0,5],[0,5],[0,5],[0,5],[6,11]]#[[1,6],[1,6],[0,5],[5,10],[9,14],[15,20] ]#[[0,5]]#
+
+video_list = []
+givenfreq_list = []
+time_range_list = []
+
+video_list = [22,22,44,44,55,7,88,88,100,133,133,155,19,20,244]
+givenfreq_list = [1.0,1.0,1.0,1.0,1.0,0.9,0.8,0.8,0.9,1.0,1.0,1.0,1.1,1.1,1.6]
+time_range_list = [[1,6],[11,16],[1,6],[12,17],[10,15],[6,11],[1,6],[10,15],[4,9],[0,5],[16,21],[1,6],[0,5],[7,12],[0,5]]
+
+
+
+
 #  find 10 s videos to improve quality
 for videoname,givenfreq,time_range in zip(video_list,givenfreq_list,time_range_list):
     print(videoname,givenfreq,time_range)

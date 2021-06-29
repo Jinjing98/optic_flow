@@ -72,45 +72,45 @@ def significant_peaktest(idx,fft_result,top10_ID):
     mean_mag = np.mean(np.abs(np.absolute(fft_result[top10_ID])))
     # mag_left = np.abs(np.absolute(fft_result[idx-1]))
     return (magnitude>mean_mag*1)#1.2)
-def check2Harm(secondHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y):
-    if (int(secondHarmonicIDX) in topharmonic_ID[:, y, x]):
-        return True,secondHarmonicIDX
-    elif (int((secondHarmonicIDX + 1)) in topharmonic_ID[:, y, x]):
-        secondHarmonicIDX = secondHarmonicIDX + 1
-        return True,secondHarmonicIDX
-    elif (int((secondHarmonicIDX - 1))in topharmonic_ID[:, y, x]):
-        secondHarmonicIDX = secondHarmonicIDX - 1
-        return True,secondHarmonicIDX
-    else:
-        mask2D[y, x] = False
-        bestIDX[y, x] = 0
-        #three
-        maskset[2:, y, x] = False
-        return False,secondHarmonicIDX
-
-
-def check3Harm(thirdHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y):
-    if (int(thirdHarmonicIDX) in topharmonic_ID[:, y, x]):
-        return True,thirdHarmonicIDX
-    elif (int((thirdHarmonicIDX + 1)) in topharmonic_ID[:, y, x]):
-        thirdHarmonicIDX = thirdHarmonicIDX + 1
-        return True,thirdHarmonicIDX
-    elif (int((thirdHarmonicIDX - 1))  in topharmonic_ID[:, y, x]):
-        thirdHarmonicIDX = thirdHarmonicIDX - 1
-        return True,thirdHarmonicIDX
-    elif (int((thirdHarmonicIDX + 2)) in topharmonic_ID[:, y, x]):
-        thirdHarmonicIDX = thirdHarmonicIDX + 2
-        return True,thirdHarmonicIDX
-    elif (int((thirdHarmonicIDX - 2)) in topharmonic_ID[:, y, x]):
-        thirdHarmonicIDX = thirdHarmonicIDX - 2
-        return True,thirdHarmonicIDX
-    else:
-        mask2D[y, x] = False
-        bestIDX[y, x] = 0
-        #three
-        maskset[2:, y, x] = False
-        return False,thirdHarmonicIDX
-
+# def check2Harm(secondHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y):
+#     if (int(secondHarmonicIDX) in topharmonic_ID[:, y, x]):
+#         return True,secondHarmonicIDX
+#     elif (int((secondHarmonicIDX + 1)) in topharmonic_ID[:, y, x]):
+#         secondHarmonicIDX = secondHarmonicIDX + 1
+#         return True,secondHarmonicIDX
+#     elif (int((secondHarmonicIDX - 1))in topharmonic_ID[:, y, x]):
+#         secondHarmonicIDX = secondHarmonicIDX - 1
+#         return True,secondHarmonicIDX
+#     else:
+#         mask2D[y, x] = False
+#         bestIDX[y, x] = 0
+#         #three
+#         maskset[2:, y, x] = False
+#         return False,secondHarmonicIDX
+#
+#
+# def check3Harm(thirdHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y):
+#     if (int(thirdHarmonicIDX) in topharmonic_ID[:, y, x]):
+#         return True,thirdHarmonicIDX
+#     elif (int((thirdHarmonicIDX + 1)) in topharmonic_ID[:, y, x]):
+#         thirdHarmonicIDX = thirdHarmonicIDX + 1
+#         return True,thirdHarmonicIDX
+#     elif (int((thirdHarmonicIDX - 1))  in topharmonic_ID[:, y, x]):
+#         thirdHarmonicIDX = thirdHarmonicIDX - 1
+#         return True,thirdHarmonicIDX
+#     elif (int((thirdHarmonicIDX + 2)) in topharmonic_ID[:, y, x]):
+#         thirdHarmonicIDX = thirdHarmonicIDX + 2
+#         return True,thirdHarmonicIDX
+#     elif (int((thirdHarmonicIDX - 2)) in topharmonic_ID[:, y, x]):
+#         thirdHarmonicIDX = thirdHarmonicIDX - 2
+#         return True,thirdHarmonicIDX
+#     else:
+#         mask2D[y, x] = False
+#         bestIDX[y, x] = 0
+#         #three
+#         maskset[2:, y, x] = False
+#         return False,thirdHarmonicIDX
+#
 
 def test1(pos_Y_from_fft,precision4given,top10_ID,topharmonic_ID,df,given_freq,maskNfreqID_infoMat):  # try to reduce FN
 
@@ -137,31 +137,32 @@ def test1(pos_Y_from_fft,precision4given,top10_ID,topharmonic_ID,df,given_freq,m
             if mask2D[y,x]:
                 if y == 19 and x==108:
                     print()
-                index = top10_ID_filter[closest_layer_number[y,x],y,x]
+                index = top10_ID_filter[0,y,x]#closest_layer_number[y,x],y,x]
                 bestIDX[y, x] = index
-                secondHarmonicIDX = 2*bestIDX[y,x]
-                thirdHarmonicIDX = 3*bestIDX[y,x]
+                # secondHarmonicIDX = 2*bestIDX[y,x]
+                # thirdHarmonicIDX = 3*bestIDX[y,x]
 
-                if significant_peaktest(index,pos_Y_from_fft[:,y,x], top10_ID[:,y,x]) == False:  # hope to help removing irreg
-                    mask2D[y, x] = False
-                    bestIDX[y, x] = 0
-                    #two
-                    maskset[1:,y,x] = False
-                    continue
+                # if significant_peaktest(index,pos_Y_from_fft[:,y,x], top10_ID[:,y,x]) == False:  # hope to help removing irreg
+                #     mask2D[y, x] = False
+                #     bestIDX[y, x] = 0
+                #     #two
+                #     maskset[1:,y,x] = False
+                #     continue
 
+                #
+                # flag2,secondHarmonicIDX =  check2Harm(secondHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y)
+                # flag3,thirdHarmonicIDX = check3Harm(thirdHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y)
 
-                flag2,secondHarmonicIDX =  check2Harm(secondHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y)
-                flag3,thirdHarmonicIDX = check3Harm(thirdHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y)
-
-                if mask2D[y, x]:
-                    bestID = int(bestIDX[y, x])
-                    bestStr[y, x] = pos_Y_from_fft[bestID, y, x]
+                # if mask2D[y, x]:
+                bestID = int(bestIDX[y, x])
+                bestStr[y, x] = pos_Y_from_fft[bestID, y, x]
 
     bestStr = np.abs(np.absolute(bestStr))  #  finally use  mask2D(bool) bestIDX bestStr
+    print("max beststr,", np.max(bestStr))
     maskNfreqID_infoMat[0] = mask2D.astype(np.uint32)    #mask
     maskNfreqID_infoMat[1] = bestIDX#index
 
-    return maskNfreqID_infoMat,bestStr
+    return maskNfreqID_infoMat,bestStr   #  i can save up here!
 
 def func(x, a, b, c):
     return a * np.exp(-b * x) + c
@@ -169,15 +170,15 @@ def func(x, a, b, c):
 #normalize to 0-255
 def test2(bestStr,maskNfreqID_infoMat,df): # require relative strong strength
 
-    bestStr1D = bestStr.flatten()
-    bestStr1D = -np.sort(-bestStr1D)
-    maxStr = np.max(bestStr1D)
-    # bestStr1D = bestStr1D/maxStr
-
-    absStr0 = 0
-    mask2D = np.where(bestStr>absStr0,True,False)
-    mask2D = mask2D.astype(np.uint32)
-    maskNfreqID_infoMat[0] = mask2D
+    # bestStr1D = bestStr.flatten()
+    # bestStr1D = -np.sort(-bestStr1D)
+    maxStr = np.max(bestStr)
+    # # bestStr1D = bestStr1D/maxStr
+    #
+    # absStr0 = 0
+    # mask2D = np.where(bestStr>absStr0,True,False)
+    # mask2D = mask2D.astype(np.uint32)
+    mask2D = maskNfreqID_infoMat[0].copy
     maskNfreqID_infoMat[1] = np.where(mask2D == False, int(0),maskNfreqID_infoMat[1])
 
 #vis and save threshold0
@@ -198,6 +199,23 @@ def test2(bestStr,maskNfreqID_infoMat,df): # require relative strong strength
     plt.savefig(path_prefix + "_magmap.png")
     plt.show()
     # normalize to 0-255 before ostu
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     bestStr = (bestStr * 255 / maxStr).astype(np.uint8) if maxStr != 0 else bestStr.astype(np.uint8)
     # if gridnumx == 512:
     #     bestStr = cv2.GaussianBlur(bestStr, (5, 5), 0)## based on the raw num4x * num4y
@@ -209,40 +227,40 @@ def test2(bestStr,maskNfreqID_infoMat,df): # require relative strong strength
     newthr, result_img = cv2.threshold(bestStr, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
     # newmask = np.where(bestStr>newthr,True,False).astype(np.uint32)if maxStr!=0 else False
     # four
-    maskset[3] = result_img
-    np.save(masksetpath,maskset)
+    maskset[1] = result_img
+    # np.save(masksetpath,maskset)
 
-    plt.subplot(2, 2, 1)
-    plt.title("(a)", y=-0.18)
+    plt.subplot(1, 2, 1)
+    plt.title("(a) nbr", y=-0.18)
     plt.imshow(maskset[0], cmap="gray")
     plt.xticks([])
     plt.yticks([])
     # plt.savefig(path_prefix + "filtering.png")
     # plt.show()
-    plt.subplot(2, 2, 2)
-    plt.title("(b)",y = -0.18)
+    plt.subplot(1, 2, 2)
+    plt.title("(b) otsu",y = -0.18)
     plt.imshow(maskset[1], cmap="gray")
     plt.xticks([])
     plt.yticks([])
     # plt.savefig(path_prefix + "_test1.png")
     # plt.show()
-    plt.subplot(2, 2, 3)
-    plt.title("(c)",y = -0.18)
-    plt.imshow(maskset[2], cmap="gray")
-    plt.xticks([])
-    plt.yticks([])
-    # plt.savefig(path_prefix + "_test2.png")
-    # plt.show()
-    plt.subplot(2, 2, 4)
-    plt.title("(d)",y = -0.18)
-    plt.imshow(maskset[3], cmap="gray")
-    plt.xticks([])
-    plt.yticks([])
+    # plt.subplot(2, 2, 3)
+    # plt.title("(c)",y = -0.18)
+    # plt.imshow(maskset[2], cmap="gray")
+    # plt.xticks([])
+    # plt.yticks([])
+    # # plt.savefig(path_prefix + "_test2.png")
+    # # plt.show()
+    # plt.subplot(2, 2, 4)
+    # plt.title("(d)",y = -0.18)
+    # plt.imshow(maskset[3], cmap="gray")
+    # plt.xticks([])
+    # plt.yticks([])
     plt.savefig(path_prefix + "_update.png")
     plt.show()
 
 # individually visulise final mask
-    plt.imshow(maskset[3], cmap="gray")
+    plt.imshow(maskset[1], cmap="gray")
     plt.xticks([])
     plt.yticks([])
     # plt.savefig(path_prefix + "_test3.png")
@@ -267,7 +285,7 @@ def fft_window(conv_times,visuliseFFT,visuliseRAW,top,top4harmonic,fps,givenfreq
 
     num4indexY =  array_3d.shape[1]
     num4indexX =  array_3d.shape[2]
-    maskNfreqID_infoMat = np.zeros((5,num4indexY,num4indexX),np.uint32)  #  change 2 to 5  (+25,50,75)
+    maskNfreqID_infoMat = np.zeros((2,num4indexY,num4indexX),np.uint32)  #  change 2 to 5  (+25,50,75)
 
 
 
@@ -297,7 +315,7 @@ def fft_window(conv_times,visuliseFFT,visuliseRAW,top,top4harmonic,fps,givenfreq
 
     order_list = np.argsort(-np.abs(np.absolute(pos_Y_from_fft)),axis=0)
 
-    top10_ID = order_list[1:(top+1)]
+    top10_ID = order_list[1:2]#(top+1)]
     topharmonic_ID = order_list[1:(top4harmonic+1)]
     _,bestStr = test1(pos_Y_from_fft,precision4given,top10_ID,topharmonic_ID, df, givenfreq, maskNfreqID_infoMat )
 
@@ -308,7 +326,7 @@ def fft_window(conv_times,visuliseFFT,visuliseRAW,top,top4harmonic,fps,givenfreq
 
     # for interation  this is only utilized for the mask before level 3 of maskset
     # if we want to interact with other mask just change here!
-    mask_2d =  maskset[2]#maskNfreqID_infoMat[0]
+    mask_2d = maskset[0]#maskNfreqID_infoMat[0]  #  i can change here according to what i want to see
     y_idx = np.nonzero(mask_2d)[0]
     x_idx = np.nonzero(mask_2d)[1]
     mask_2d = np.zeros((imgy, imgx))  # full resolution of final mask2D before amp test
@@ -327,7 +345,7 @@ def fft_window(conv_times,visuliseFFT,visuliseRAW,top,top4harmonic,fps,givenfreq
 
 ## additinal seperataly save the final mask
     mask_path = path_prefix+"_mask.png"
-    mask_2d = maskset[3]#maskNfreqID_infoMat[0]
+    mask_2d = maskset[1]#maskNfreqID_infoMat[0]
     y_idx = np.nonzero(mask_2d)[0]
     x_idx = np.nonzero(mask_2d)[1]
     mask_2d = np.zeros((imgy, imgx))  # full resolution of final mask2D before amp test
@@ -381,85 +399,6 @@ def gridsig_generate():
 
 
 
-
-#
-# #params you may want to change
-# fps = 30
-# # 可以非整除
-# realfreq4samples = 30  # it is not the final real freq
-# fmt = ".avi"#".mp4"#".avi"  #.map4 is ori video suitable for everything except FN,.avi is resize suitable for everything
-# precision4given = 0.11#
-#
-# extensionDir = "D:\Study\Datasets\extension\\"
-# extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\irreg_motion\\"
-# extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulseNstatic\\"
-# # extensionDir = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\\arti_videos\\"
-# extensionDir = "D:\Study\Datasets\AATEST\\new_short\\"
-# # extensionDir = "D:\Study\Datasets\AATEST\shortclips\shortclips\\"
-# #
-# # # params change frequently
-# imgx =   512#360#512#854#720#360#854#360
-# imgy = 384#288#384#480#288#480#288
-# gridnumx = 512#128#32#512#256#64#32#128#32#512#32#512#32#128# 32#512#32#512#32#512#32#128#512#  32#128#512#32#128#  512#32#32#128#512#32#128#512 # 32#128#512#128#32#512#32#512#32#512#32#512#32#64#512#64#512#32#64#512#256#64#512#256#128#64#32#512#45#360#512# 128#512#32#128#512#360#  512#128#32#128#512#32#128#512# 32#128#512#128#512#32#512#32#512#32# 256#512#32#64#  128#32#64#128#256#512#32#64#128#256#512#45#90#180#360#180#360#512#854#720#360#854#360#180#90#360#90#180#360#720#180#72#36#36#18#360#180#18#36#72
-# gridnumy =  384#96#24#384#192#48#24#96#24#384#24#384#24#96#24#384#24#384#24#384#24#96#384#24#96# 384#24#96#384#24#24#96#384#24#96#384#24#96#384 #96#24#384#24#384#24#384#24#384#24#48#384#48#384#24#48#384#192#48# 384#192#96#48#24#36#384#36#288#384#96#384# 24#96#384#288# 384#96#96#384# 24#96#384#24#96#384#96#384#24#384#2
-# videoname = "4"#"11"#"11"#"h3"#"3"#"cardNresp1"#"card1"#"WinB25"#"resp3"#"card1"# \"+videoname+"#BINW25  WINB127 WINB25
-# givenfreq = 1.6#0.95#1.25#1.3#1.3#1.3#0.8#1.25#1.3#1.5#1.25#0.8#1.25#0.8#1#0.8#1.5#2.3# 0.8#0.35#1.5   # edit it to 1.1  the result is not good as expected!
-# time_range = [5,10]#[1,8]#35 [21,31]#[0,20]
-# conv_times =1#2#2# 0 #(0,1,2,3)  0 mean no colv   when you set this to true, make sure the note is "ang"
-# mode = "GF"# "HS"  #gray   HS  FN GF
-# note = "ang"#"mag"#"mag"#"mag"#"mag"# "ang" "mag"
-#
-# #
-#
-# t = time_range[1]-time_range[0]
-# unit = round(t/5.0)
-# # unit = 3
-# top = 5*unit#20#10#20  #keep right there, only take up the highest 20 ID into account
-# top4harmonic =20*unit#25#25
-# step = round(fps /realfreq4samples)
-# real_sample_freq = float(fps) / step
-# df =  real_sample_freq/ (t*real_sample_freq - 1)
-# sigmoid4t =  1/(1 + np.exp(-(t/15)))  #definately bigger than (0.5,1)  # suppose out video 5s-20s
-# sigmoid4given = 1/(1 + np.exp(-givenfreq)) # (0.5,1)#positively related to givenfreq, at the same time restrict it in [0,1]
-# String0 = str(gridnumx)+"_"+str(gridnumy)
-# String = str(gridnumx)+"_"+str(gridnumy)+"_"+str(top)+"_"+str(top4harmonic)+"_"+str(conv_times)+"_"+str(precision4given)+"_"+str(givenfreq)
-# String3 =str(time_range[0])+"s_"+str(time_range[1])+"s_top"+str(top)+"_"+str(top4harmonic)+"_conv"+str(conv_times)+"_nbr"+str(precision4given)+"_given"+str(givenfreq)
-# videopath = extensionDir+videoname+fmt
-# meansigarrayDIR = extensionDir+videoname+"\\"
-# meansigarrayPath = meansigarrayDIR+mode+"\\"+note+"\size"+String0+"\\"+"SIGS_"+mode+"_"+str(time_range[0])+"_"+str(time_range[1])+note+".npy"
-# path_prefix = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\\"+String3
-# infoMatDIR = extensionDir+videoname+"\\"+mode+"\\"+note+"\size"+String0+"\\"
-# infoMatPath = path_prefix+"_"+"infoMat_mask_ID"+".npy"
-#
-# masksetpath = path_prefix + "_maskSet.npy"
-# maskset = np.zeros((4, gridnumy, gridnumx), np.bool)
-# path4csv = meansigarrayDIR+videoname+".csv"
-# truthimg_path = meansigarrayDIR+"GTmask.png"
-# dir4masksets = meansigarrayDIR  # can recursive search
-#
-#
-# # pixelwisesig_generate(mode)  # CARRY OUT THIS FOR ONE TIME with pixel wise mose THEN COMMENT OUT
-# # #generate grid sig
-# #
-# gridsig_generate()# this is used when increase the grid size,the pixel wise sig to generate obj sig without import video ,OF computing etc.
-# #
-# flag,df,realtotalNUM = fft_window(conv_times,1,1,top,top4harmonic,fps, givenfreq,precision4given,meansigarrayPath,infoMatPath, realfreq4samples,path_prefix )#, [0.1, 0.3])
-#
-# #  maybe we should consider the statistics before and after ostu threshold?
-#
-# generateALLstats4video(imgx,gridnumx,imgy,gridnumy,truthimg_path,path4csv,dir4masksets)
-#
-
-
-
-
-
-
-
-
-
-
-
 # extensionDir = "D:\Study\Datasets\AAAtest\\"#"D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulse_today\\"
 extensionDir = "D:\Study\Datasets\AATEST\\instru_pulse\\"
 extensionDir = "D:\Study\Datasets\AATEST\\new_short\\"
@@ -491,13 +430,18 @@ time_range_list = []
 video_list = [22,22,44,44,55,7,88,88,100,133,133,155,19,20,244]
 givenfreq_list = [1.0,1.0,1.0,1.0,1.0,0.9,0.8,0.8,0.9,1.0,1.0,1.0,1.1,1.1,1.6]
 time_range_list = [[1,6],[11,16],[1,6],[12,17],[10,15],[6,11],[1,6],[10,15],[4,9],[0,5],[16,21],[1,6],[0,5],[7,12],[0,5]]
-
-video_list = [6]
-givenfreq_list = [1.6]
-time_range_list = [[15,20]]
+#  there is issue for 10 not for 6 with the simple script
 video_list = [10]#[6]
 givenfreq_list = [1.2]#[1.6]
 time_range_list = [[0,5]]#[[15,20]]
+
+
+#maybe set more type?
+
+
+# video_list = [6]
+# givenfreq_list = [1.6]
+# time_range_list = [[15,20]]
 
 #  find 10 s videos to improve quality
 for videoname,givenfreq,time_range in zip(video_list,givenfreq_list,time_range_list):
@@ -506,7 +450,7 @@ for videoname,givenfreq,time_range in zip(video_list,givenfreq_list,time_range_l
     t = time_range[1] - time_range[0]
     unit = round(t / 5.0)
     top = 5 * unit  # 20#10#20  #keep right there, only take up the highest 20 ID into account
-    # top = 1*unit
+    top = 1*unit
     top4harmonic = 20 * unit  # 25#25
     realfreq4samples = fps  # it is not the final real freq
     step = round(fps / realfreq4samples)
@@ -533,7 +477,7 @@ for videoname,givenfreq,time_range in zip(video_list,givenfreq_list,time_range_l
                 time_range[0]) + "_" + str(time_range[1]) + note + ".npy"
             path_prefix = extensionDir + videoname + "\\" + mode + "\\" + note + "\size" + String0 + "\\" + String3
             masksetpath = path_prefix + "_maskSet.npy"
-            maskset = np.zeros((4, gridnumy, gridnumx), np.bool)
+            maskset = np.zeros((2, gridnumy, gridnumx), np.bool)
 
             if gridnumx == 512 and note != "ang":
                 pixelwisesig_generate(mode)  # CARRY OUT THIS FOR ONE TIME with pixel wise mose THEN COMMENT OUT

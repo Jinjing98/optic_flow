@@ -16,7 +16,7 @@ import os
 import cv2
 
 dirvideo = 'D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulseNstatic\\'
-dirvideo = "D:\Study\Datasets\AATEST\latest\\video\\part1\\"
+dirvideo = "D:\Study\Datasets\AEXTENSION\hamlyn_extension\\"
 # dirvideo = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulseNstatic\HAMLYN\\"
 # dirvideo = "D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulseNstatic\HAMLYN\\"
 listinit = os.listdir(dirvideo)
@@ -24,24 +24,30 @@ list = listinit.copy()
 new_size = (512,384)
 for i in range(0, len(list)):
     path = dirvideo+os.path.join(list[i])
-    if path.endswith('.mp4'):#or path.endswith('avi'):
+    if path.endswith('114.mp4'):#or path.endswith('avi'):
         print(path)
         cap = cv2.VideoCapture(path)
         _, frame1 = cap.read()
 
+
         # fourcc = cv2.VideoWriter_fourcc(*'XVID')
         fourcc = cv2.VideoWriter_fourcc('I', '4', '2', '0')
-        out = cv2.VideoWriter(path[:-4]+"_"+'.avi', fourcc, 30, new_size)
+        out = cv2.VideoWriter(path[:-4]+""+'.avi', fourcc, 25, new_size)
 
-
+        i = 1
         while (i):
 
             # Capture another frame and convert to gray scale
             ret, frame2 = cap.read()
+            frame2 = cv2.resize(frame2, new_size, interpolation=cv2.INTER_LINEAR)
+
+
             if ret != True:
                 break
 
+
             b = cv2.resize(frame2, new_size,interpolation=cv2.INTER_LINEAR)
+
             out.write(b)
 
 

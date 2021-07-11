@@ -71,39 +71,39 @@ def significant_peaktest(idx,fft_result,top10_ID):
     magnitude = np.abs(np.absolute(fft_result[idx]))
     mean_mag = np.mean(np.abs(np.absolute(fft_result[top10_ID])))
     # mag_left = np.abs(np.absolute(fft_result[idx-1]))
-    return (magnitude>mean_mag*1)#1.2)
+    return (magnitude>0)#mean_mag*1)#1.2)
 def check2Harm(secondHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y):
-    if (int(secondHarmonicIDX) in topharmonic_ID[:, y, x]):
+    if (int(secondHarmonicIDX) in topharmonic_ID[:8, y, x]):
         return True,secondHarmonicIDX
-    elif (int((secondHarmonicIDX + 1)) in topharmonic_ID[:, y, x]):
+    elif (int((secondHarmonicIDX + 1)) in topharmonic_ID[:8, y, x]):
         secondHarmonicIDX = secondHarmonicIDX + 1
         return True,secondHarmonicIDX
-    elif (int((secondHarmonicIDX - 1))in topharmonic_ID[:, y, x]):
+    elif (int((secondHarmonicIDX - 1))in topharmonic_ID[:8, y, x]):
         secondHarmonicIDX = secondHarmonicIDX - 1
         return True,secondHarmonicIDX
     else:
         mask2D[y, x] = False
         bestIDX[y, x] = 0
         #three
-        maskset[2:, y, x] = False
+        maskset[1:, y, x] = False
         return False,secondHarmonicIDX
 
 
 def check3Harm(thirdHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y):
     if (int(thirdHarmonicIDX) in topharmonic_ID[:, y, x]):
         return True,thirdHarmonicIDX
-    elif (int((thirdHarmonicIDX + 1)) in topharmonic_ID[:, y, x]):
-        thirdHarmonicIDX = thirdHarmonicIDX + 1
-        return True,thirdHarmonicIDX
-    elif (int((thirdHarmonicIDX - 1))  in topharmonic_ID[:, y, x]):
-        thirdHarmonicIDX = thirdHarmonicIDX - 1
-        return True,thirdHarmonicIDX
-    elif (int((thirdHarmonicIDX + 2)) in topharmonic_ID[:, y, x]):
-        thirdHarmonicIDX = thirdHarmonicIDX + 2
-        return True,thirdHarmonicIDX
-    elif (int((thirdHarmonicIDX - 2)) in topharmonic_ID[:, y, x]):
-        thirdHarmonicIDX = thirdHarmonicIDX - 2
-        return True,thirdHarmonicIDX
+    # elif (int((thirdHarmonicIDX + 1)) in topharmonic_ID[:, y, x]):
+    #     thirdHarmonicIDX = thirdHarmonicIDX + 1
+    #     return True,thirdHarmonicIDX
+    # elif (int((thirdHarmonicIDX - 1))  in topharmonic_ID[:, y, x]):
+    #     thirdHarmonicIDX = thirdHarmonicIDX - 1
+    #     return True,thirdHarmonicIDX
+    # elif (int((thirdHarmonicIDX + 2)) in topharmonic_ID[:, y, x]):
+    #     thirdHarmonicIDX = thirdHarmonicIDX + 2
+    #     return True,thirdHarmonicIDX
+    # elif (int((thirdHarmonicIDX - 2)) in topharmonic_ID[:, y, x]):
+    #     thirdHarmonicIDX = thirdHarmonicIDX - 2
+    #     return True,thirdHarmonicIDX
     else:
         mask2D[y, x] = False
         bestIDX[y, x] = 0
@@ -142,16 +142,16 @@ def test1(pos_Y_from_fft,precision4given,top10_ID,topharmonic_ID,df,given_freq,m
                 secondHarmonicIDX = 2*bestIDX[y,x]
                 thirdHarmonicIDX = 3*bestIDX[y,x]
 
-                if significant_peaktest(index,pos_Y_from_fft[:,y,x], top10_ID[:,y,x]) == False:  # hope to help removing irreg
-                    mask2D[y, x] = False
-                    bestIDX[y, x] = 0
-                    #two
-                    maskset[1:,y,x] = False
-                    continue
+                # if significant_peaktest(index,pos_Y_from_fft[:,y,x], top10_ID[:,y,x]) == False:  # hope to help removing irreg
+                #     mask2D[y, x] = False
+                #     bestIDX[y, x] = 0
+                #     #two
+                #     maskset[1:,y,x] = False
+                #     continue
 
 
                 flag2,secondHarmonicIDX =  check2Harm(secondHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y)
-                flag3,thirdHarmonicIDX = check3Harm(thirdHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y)
+                # flag3,thirdHarmonicIDX = check3Harm(thirdHarmonicIDX,mask2D,bestIDX,topharmonic_ID,x,y)
 
                 if mask2D[y, x]:
                     bestID = int(bestIDX[y, x])
@@ -187,7 +187,7 @@ def test2(bestStr,maskNfreqID_infoMat,df): # require relative strong strength
     plt.yticks([])
     # plt.title("frequency distribution of mask with threshold0")
     plt.savefig(path_prefix + "_freqmap.png")
-    plt.show()
+    # plt.show()
 
 
     img2 = plt.imshow(bestStr, cmap='hot', interpolation='nearest')
@@ -196,7 +196,7 @@ def test2(bestStr,maskNfreqID_infoMat,df): # require relative strong strength
     plt.yticks([])
     # plt.title("\"periodicness\" magnitude distribution of mask without threshold")
     plt.savefig(path_prefix + "_magmap.png")
-    plt.show()
+    # plt.show()
     # normalize to 0-255 before ostu
     bestStr = (bestStr * 255 / maxStr).astype(np.uint8) if maxStr != 0 else bestStr.astype(np.uint8)
     # if gridnumx == 512:
@@ -242,7 +242,13 @@ def test2(bestStr,maskNfreqID_infoMat,df): # require relative strong strength
     plt.show()
 
 # individually visulise final mask
-    plt.imshow(maskset[3], cmap="gray")
+    test = maskset[2].copy()
+    test = (test*255).astype(np.uint8)#(bestStr * 255 / maxStr).astype(np.uint8) if maxStr != 0 else bestStr.astype(np.uint8)
+    test = cv2.GaussianBlur(test, (5, 5), 0)
+    test = np.where(test>128,1,0)#1 if test>128 else 0
+
+
+    plt.imshow(test ,cmap="gray")
     plt.xticks([])
     plt.yticks([])
     # plt.savefig(path_prefix + "_test3.png")
@@ -462,7 +468,7 @@ def gridsig_generate():
 
 # extensionDir = "D:\Study\Datasets\AAAtest\\"#"D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulse_today\\"
 extensionDir = "D:\Study\Datasets\AATEST\\instru_pulse\\"
-extensionDir = "D:\Study\Datasets\AATEST\\new_short\\"
+# extensionDir = "D:\Study\Datasets\AATEST\\new_short\\"
 
 # extensionDir = "D:\Study\Datasets\AAATEST\\"
 imgx =   512#360#512#854#720#360#854#360
@@ -495,19 +501,29 @@ time_range_list = [[1,6],[11,16],[1,6],[12,17],[10,15],[6,11],[1,6],[10,15],[4,9
 video_list = [6]
 givenfreq_list = [1.6]
 time_range_list = [[15,20]]
-video_list = [10]#[6]
-givenfreq_list = [1.2]#[1.6]
-time_range_list = [[0,5]]#[[15,20]]
+# video_list = [44]
+# givenfreq_list = [1.0]
+# time_range_list =[[12,17]]
+# video_list = [255]
+# givenfreq_list = [1.6]
+# time_range_list =[[6,11]]
 
-#  find 10 s videos to improve quality
+video_list = [244]
+givenfreq_list = [1.6]
+time_range_list =[[0,5]]
+
+video_list = [88]
+givenfreq_list = [0.8]
+time_range_list =[[1,6]]
+ # find 10 s videos to improve quality
 for videoname,givenfreq,time_range in zip(video_list,givenfreq_list,time_range_list):
     print(videoname,givenfreq,time_range)
     videoname = str(videoname)
     t = time_range[1] - time_range[0]
     unit = round(t / 5.0)
-    top = 5 * unit  # 20#10#20  #keep right there, only take up the highest 20 ID into account
+    top = 3 * unit  # 20#10#20  #keep right there, only take up the highest 20 ID into account
     # top = 1*unit
-    top4harmonic = 20 * unit  # 25#25
+    top4harmonic = 15 * unit  # 25#25
     realfreq4samples = fps  # it is not the final real freq
     step = round(fps / realfreq4samples)
     real_sample_freq = float(fps) / step

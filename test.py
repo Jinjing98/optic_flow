@@ -117,12 +117,30 @@ def draw2pointsRAW_FFT(vispos_YX,vispos_YX2,realfreq4samples,t,mode,note,gridnum
 
 import cv2
 import numpy as np
+from statsmodels.graphics import tsaplots
+
 
 # # Picture path
 # img = cv2.imread('D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulseNstatic\\3\gray\size32_24\\Mask32_24_3.74_20_2_5_1.4.png')
 # gridwidth = 16
 # gridheight = 16
 
+def autocorr(x):
+    n = x.size
+    norm = (x - np.mean(x))
+    result = np.correlate(norm, norm, mode='same')
+    acorr = result[n//2 + 1:] / (x.var() * np.arange(n-1, n//2, -1))
+    # acorr = result[:] / (x.var() * np.arange(n,0, -1))
+
+    lag = np.abs(acorr).argmax() + 1
+    r = acorr[lag-1]
+    if np.abs(r) > 0.5:
+      print('Appears to be autocorrelated with r = {}, lag = {}'. format(r, lag))
+    else:
+      print('Appears to be not autocorrelated')
+    return acorr
+from scipy.misc import electrocardiogram
+from scipy.signal import find_peaks
 def on_EVENT_LBUTTONDOWN(event, x, y,flag,img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP):
     if event == cv2.EVENT_LBUTTONDOWN:
         vispos_YX = []
@@ -136,7 +154,8 @@ def on_EVENT_LBUTTONDOWN(event, x, y,flag,img_width_height_fftNUMPY_VISFFTflag_V
         Y = vispos_YX[0]
         X = vispos_YX[1]
         print("Y: ",Y," X: ", X )
-        
+        freqIDMAP = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[-1]
+
         if img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[4]:  # is visFFT
 
             M = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[3][:, Y, X].size
@@ -149,11 +168,10 @@ def on_EVENT_LBUTTONDOWN(event, x, y,flag,img_width_height_fftNUMPY_VISFFTflag_V
             plt.title("positiveHalf fft YX" + str(Y) + "_" + str(X))
             # plt.savefig(img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[7][:-4] + "_" + str(Y) + "_" + str(X) + ".png")
             plt.show()
-            freqIDMAP = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[-1]
             print(" BestFreq: ",freqIDMAP[Y][X]*df," mag4BestFreq: ",magnitudelist[freqIDMAP[Y][X]])
         if img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[5]:  # is visRAW
 
-            train1 = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[8][:, Y, X][:100]
+            train1 = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[8][:, Y, X][:]
             x_axix = [i for i in range(100)] if len(train1) == 100 else [i for i in range(len(train1))]
 
             plt.plot(x_axix, train1, color='red', label="Y,X " + str(Y) + "_" + str(X))
@@ -167,6 +185,42 @@ def on_EVENT_LBUTTONDOWN(event, x, y,flag,img_width_height_fftNUMPY_VISFFTflag_V
             plt.title("RAW SIGNAL AT GRID POS YX" + str(Y) + "_" + str(X))
             # plt.savefig(img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[7][:-4] + "_" + str(Y) + "_" + str(X) + "RAW.png")
             plt.show()
+
+            train2 = autocorr(train1)
+            x_axix2 = [i for i in range(len(train2))]#[i for i in range(100)] if len(train1) == 100 else [i for i in range(len(train1))]
+
+            # plt.plot(x_axix2, train2, color='green', label="Y,X " + str(Y) + "_" + str(X))
+            # plt.xlabel('frame id')
+            # plt.title("ACF " + str(Y) + "_" + str(X))
+            # plt.show()
+
+            peaks, _ = find_peaks(train2, height=0,prominence=0,threshold=0.005)
+            print(peaks)
+            print("estimated frame is :",round(30/(freqIDMAP[Y][X]*df)) )
+            plt.plot(x_axix2,train2)
+            plt.xlabel('frame ID')
+            plt.plot(peaks, train2[peaks], "x")
+            plt.plot(np.zeros_like(train2), "--", color="gray")
+            plt.title("ACF with peak " + str(Y) + "_" + str(X))
+            plt.show()
+
+#yx     43 211    :23 48     65 249  : 22
+
+
+
+
+            #
+            #
+            # fig = tsaplots.plot_acf(train1, lags=140)
+            # plt.title("another ACF " + str(Y) + "_" + str(X))
+            # plt.show()
+            #
+
+
+
+
+
+
 
 
 

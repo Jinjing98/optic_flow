@@ -8,7 +8,7 @@ from scipy.signal import butter, lfilter
 import time
 import pylab as plt
 from scipy import stats
-from HS_GF_FN_GRAY_func import HS,GF,GRAY,FN
+from HS_GF_FN_GRAY_func import HS,GF,GRAY,GRAY_free,FN
 from test import draw2pointsRAW_FFT,on_EVENT_LBUTTONDOWN
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import *
@@ -485,6 +485,7 @@ def fft_window(conv_times,visuliseFFT,visuliseRAW,top,top4harmonic,fps,givenfreq
         mask_2d[y * gridheight:(y + 1) * gridheight, x * gridwidth:(x + 1) * gridwidth] = 1
     mask_2d = mask_2d.astype(np.float32) * 255
     mask_2dCP = mask_2d.copy()
+    # from test import draw2pointsRAW_FFT, on_EVENT_LBUTTONDOWN
     cv2.namedWindow("image")
     img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP = (mask_2dCP,gridwidth, gridheight,pos_Y_from_fft,visuliseFFT,visuliseRAW,df,path4signal,array_3d,maskNfreqID_infoMat[1])
    # this func can interatively show curve
@@ -552,7 +553,7 @@ def gridsig_generate():
 
 # extensionDir = "D:\Study\Datasets\AAAtest\\"#"D:\Study\Datasets\AEXTENSION\Cho80_extension\static_cam\pulse_today\\"
 extensionDir = "D:\Study\Datasets\AATEST\\instru_pulse\\"
-extensionDir = "D:\Study\Datasets\AATEST\\new_short\\"
+# extensionDir = "D:\Study\Datasets\AATEST\\new_short\\"
 #
 # extensionDir = "D:\Study\Datasets\AAATEST\\"
 imgx =   512#360#512#854#720#360#854#360
@@ -599,9 +600,15 @@ time_range_list = [[1,6],[11,16],[1,6],[12,17],[10,15],[6,11],[1,6],[10,15],[4,9
 video_list = [6]
 givenfreq_list = [1.6]
 time_range_list = [[15,20]]
-# video_list = [10]#[6]
-# givenfreq_list = [1.2]#[1.6]
-# time_range_list = [[0,5]]#[[15,20]]
+video_list = [9]#[6]
+givenfreq_list = [1.2]#[1.6]
+time_range_list = [[0,5]]#[[15,20]]
+
+
+# numx_list = [60]#,256,128,64,32]
+# numy_list = [50]#,192,96,48,24]
+# imgx = 60
+# imgy = 50
 
 #  find 10 s videos to improve quality
 for videoname,givenfreq,time_range in zip(video_list,givenfreq_list,time_range_list):
@@ -609,7 +616,7 @@ for videoname,givenfreq,time_range in zip(video_list,givenfreq_list,time_range_l
     videoname = str(videoname)
     t = time_range[1] - time_range[0]
     unit = round(t / 5.0)
-    top = 20 * unit  # 20#10#20  #keep right there, only take up the highest 20 ID into account
+    top = 5 * unit  # 20#10#20  #keep right there, only take up the highest 20 ID into account
     # top = 1*unit
     top4harmonic = 20 * unit  # 25#25
     realfreq4samples = fps  # it is not the final real freq

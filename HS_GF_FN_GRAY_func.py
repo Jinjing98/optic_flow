@@ -426,3 +426,62 @@ def GRAY(videopath,sigDIR,String0,time_range,gridnumX,gridnumY ):  # choose rang
     # np.save("D:\\Study\\Datasets\\AEXTENSION\\Cho80_extension\\static_cam\\pulseNstatic\\1\\gray\\size854_480\\SIGS_gray854_480.npy",SIGS_gray)
 
 
+def GRAY_free(videopath,sigDIR,String0,time_range,gridnumX,gridnumY ):  # choose ranges given a video length to collect npy
+    #meansigarrayPath = meansigarrayDIR+mode+"\size"+String0+"\\"+"SIGS_"+mode+"_"+String0+"_"+str(time_range[0])+"_"+str(time_range[1])+".npy"
+    sigpath = sigDIR+"gray"+"\size"+String0+"\\"+"SIGS_gray"+"_"+str(time_range[0])+"_"+str(time_range[1])+".npy"
+
+
+    cap = cv2.VideoCapture(videopath)
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
+    _, frame1 = cap.read()
+    prvs = cv2.cvtColor(frame1, cv2.COLOR_BGR2GRAY)
+    # prvs = cv2.resize(prvs,(50,60))
+    lower = fps * time_range[0]
+    upper = fps * time_range[1]
+    framenum = upper - lower
+
+
+    gridWidth = int(width / gridnumX)  # int 0.6 = 0; 320  required to be zhengchu, but if not, then directly negelact the boundary
+    gridHeight = int(height / gridnumY)  # 240
+    SIGS_gray = np.zeros((framenum, gridnumY, gridnumX))  # 4,3
+    gridumY = 50
+    gridumX = 60
+    SIGS_gray = np.zeros((framenum,gridumY,gridumX))
+
+
+    i = 1
+    timepoint = 0
+    start1 = time.time()
+    while (i):
+
+        ret, frame2 = cap.read()
+        if i < lower:  # 直接从好帧开始运行
+            i += 1
+            continue
+        if i >= upper:
+            break
+        if ret != True:
+            break
+
+        next = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
+        next = cv2.resize(next,(gridumY,gridumX))
+        gridumY = 50
+        gridumX = 60
+        start = time.time()
+        # before it took around 3 mins, now it is way faster based on numpy vectorization
+        # https://codingdict.com/questions/179693
+        next = next.reshape(50, 1, 60, 1)
+
+        # print(next[0,:,0,:])
+
+        SIGS_gray[timepoint] = next.mean(axis=(1, 3))
+
+        end = time.time()
+        print('time to compute mean signal for windows' + str(end - start))
+        timepoint += 1
+        i += 1
+    np.save(sigpath, SIGS_gray)
+    # np.save("D:\\Study\\Datasets\\AEXTENSION\\Cho80_extension\\static_cam\\pulseNstatic\\1\\gray\\size854_480\\SIGS_gray854_480.npy",SIGS_gray)
+

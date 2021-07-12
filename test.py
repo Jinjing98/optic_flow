@@ -230,3 +230,110 @@ def on_EVENT_LBUTTONDOWN(event, x, y,flag,img_width_height_fftNUMPY_VISFFTflag_V
 # cv2.setMouseCallback("image", on_EVENT_LBUTTONDOWN,(img,gridwidth,gridheight,pos_Y_from_fft))
 # cv2.imshow("image", img)
 # cv2.waitKey(0)
+
+#(corr_set,peaks_int_set,new_sig_superpixel,segments_label_array)
+def on_EVENT_LBUTTONDOWN_superpixel(event, x, y,flag,img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP):
+    if event == cv2.EVENT_LBUTTONDOWN:
+        corr_set = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[0]
+        peaks_int_set = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[1]
+        new_sig_superpixel = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[2]
+        segments_label_array = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[3]
+        # vispos_YX = []
+        # vispos_YX.append(int(y)-1)  #-1  since, the mouse auto recoginize frame from (1,1)
+        # vispos_YX.append(int(x)-1)
+        segment_idx = segments_label_array[int(y-1),int(x-1)]
+        yx = "(%d,%d)" % (int(y)-1,int(x)-1)
+        cv2.circle(img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[0], (x, y), 1, (0, 0, 255), thickness=-1)
+        cv2.putText(img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[0], yx+" "+str(segment_idx), (x, y), cv2.FONT_HERSHEY_PLAIN,
+                    1.0, (0,0,255), thickness=1)
+        cv2.imshow("image", img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[4])
+        Y = int(y)-1
+        X = int(x)-1
+
+        corr = corr_set[:,segment_idx]
+        peaks_int = peaks_int_set[:,segment_idx]
+        data = new_sig_superpixel[:,segment_idx]
+        given_frame = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[5]
+        print("Y: ",Y," X: ", X ,"seg_idx: ",segment_idx,"detected: ",given_frame,"estimated: ",peaks_int,"pulse: ",np.min(np.absolute(peaks_int-given_frame)) <= 3)#np.min(np.absolute(peaks_int-freq_frame)) > 3
+
+        plt.plot(corr)
+        plt.xlabel('frame ID')
+        plt.plot(peaks_int, corr[peaks_int], "x")
+        plt.plot(np.zeros_like(corr), "--", color="gray")
+        plt.title("ACF with peak for superpixel " + str(segment_idx))
+        plt.show()
+        plt.plot(data)
+        plt.title("Raw data for superpixel " + str(segment_idx))
+        plt.show()
+
+
+
+
+
+
+
+
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        #
+        # freqIDMAP = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[-1]
+        #
+        # if img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[4]:  # is visFFT
+        #
+        #     M = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[3][:, Y, X].size
+        #     df = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[6]
+        #     f = [df * n for n in range(0, M)]
+        #     magnitudelist = np.abs(np.absolute(img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[3][:, Y, X]))
+        #     # pl.semilogy(f, np.abs(np.absolute(pos_Y_from_fft[:,Y,X])))#?
+        #     plt.plot(f, magnitudelist)
+        #     plt.xlabel('freq(Hz)')
+        #     plt.title("positiveHalf fft YX" + str(Y) + "_" + str(X))
+        #     # plt.savefig(img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[7][:-4] + "_" + str(Y) + "_" + str(X) + ".png")
+        #     plt.show()
+        #     print(" BestFreq: ",freqIDMAP[Y][X]*df," mag4BestFreq: ",magnitudelist[freqIDMAP[Y][X]])
+        # if img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[5]:  # is visRAW
+        #
+        #     train1 = img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[8][:, Y, X][:]
+        #     x_axix = [i for i in range(100)] if len(train1) == 100 else [i for i in range(len(train1))]
+        #
+        #     plt.plot(x_axix, train1, color='red', label="Y,X " + str(Y) + "_" + str(X))
+        #     # plt.plot(x_axix, train2, color='gray', label="Y,X " + str(Y2) + "_" + str(X2))
+        #
+        #     # plt.legend()  # 显示图例
+        #
+        #
+        #     # pl.semilogy(f, np.abs(np.absolute(pos_Y_from_fft[:,Y,X])))#?
+        #     plt.xlabel('frame id')
+        #     plt.title("RAW SIGNAL AT GRID POS YX" + str(Y) + "_" + str(X))
+        #     # plt.savefig(img_width_height_fftNUMPY_VISFFTflag_VISRAWflag_df_path4curve_arrayRAW_freqIDMAP[7][:-4] + "_" + str(Y) + "_" + str(X) + "RAW.png")
+        #     plt.show()
+        #
+        #     train2 = autocorr(train1)
+        #     x_axix2 = [i for i in range(len(train2))]#[i for i in range(100)] if len(train1) == 100 else [i for i in range(len(train1))]
+        #
+        #     # plt.plot(x_axix2, train2, color='green', label="Y,X " + str(Y) + "_" + str(X))
+        #     # plt.xlabel('frame id')
+        #     # plt.title("ACF " + str(Y) + "_" + str(X))
+        #     # plt.show()
+        #
+        #     peaks, _ = find_peaks(train2, height=0,prominence=0,threshold=0.005)
+        #     print(peaks)
+        #     print("estimated frame is :",round(30/(freqIDMAP[Y][X]*df)) )
+        #     plt.plot(x_axix2,train2)
+        #     plt.xlabel('frame ID')
+        #     plt.plot(peaks, train2[peaks], "x")
+        #     plt.plot(np.zeros_like(train2), "--", color="gray")
+        #     plt.title("ACF with peak " + str(Y) + "_" + str(X))
+        #     plt.show()
